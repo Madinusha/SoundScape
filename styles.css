@@ -1,0 +1,156 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #5c4db1;
+    padding: 10px 20px;
+    /* width: 100%; */
+}
+
+.logo {
+    color: white;
+    font-weight: bold;
+}
+
+input[type="text"] {
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.login-btn {
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: #2f2261;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.content-container {
+    display: flex;
+}
+
+.sidebar {
+    background-color: #2f2261;
+    width: 200px;
+    padding: 20px;
+    height: 100vh;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin-bottom: 10px;
+}
+
+.sidebar ul li a {
+    color: white;
+    text-decoration: none;
+}
+
+.content {
+    flex: 1;
+    padding: 20px;
+}
+
+.footer {
+    background-color: #2f2261;
+    padding: 10px;
+}
+
+/* Стили для каждого трека */
+.track {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+/* Стили для обложки трека */
+.cover-image {
+    width: 50px; /* Задайте ширину и высоту вашей обложки */
+    height: 50px;
+    margin-right: 10px;
+}
+
+/* Стили для информации о треке (название, исполнитель) */
+.track-info {
+    display: flex; /* Располагаем элементы в строку */
+    align-items: center; /* Выравниваем элементы по вертикали */
+    flex: 1; /* Растягиваем на всю доступную ширину */
+    margin-right: 10px; /* Добавляем отступ справа для разделения между информацией и кнопками */
+}
+
+/* Стили для текста плейлиста */
+.track-info .title {
+    font-weight: bold;
+}
+
+/* Стили для кнопок в блоке трека */
+.actions {
+    display: flex; /* Располагаем кнопки в строку */
+    margin-left: auto; /* Кнопки располагаются вправо */
+}
+
+/* Стили для кнопок в треке */
+.actions button {
+    margin-left: 5px; /* Добавляем небольшой отступ между кнопками */
+    background-color: #2f2261;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+/* Добавляем стили для каждого плейлиста */
+.playlist {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    width: 7em; /* Задаем фиксированную ширину */
+    margin-right: 20px; /* Добавляем отступ между плейлистами */
+}
+
+/* Стили для блока содержащего информацию о плейлисте */
+.playlist-info {
+    flex: 1; /* Растягиваем этот блок, чтобы кнопки оставались справа */
+    text-align: center; /* Выравниваем содержимое по центру */
+}
+
+/* Стили для текста плейлиста */
+.playlist-info .title {
+    font-weight: bold;
+}
+
+/* Добавляем стили для изображения обложки плейлиста */
+.playlist img {
+    width: 5em;
+    height: 5em;
+    margin-right: 10px;
+}
+
+/* Стили для кнопок внутри плейлиста */
+.playlist .actions button {
+    margin-left: 10px;
+    background-color: #2f2261;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+

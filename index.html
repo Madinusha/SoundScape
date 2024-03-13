@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Music App</title>
+</head>
+<body>
+<header class="header">
+    <div class="logo">Логотип</div>
+    <input type="text" placeholder="Поиск...">
+    <button class="login-btn">Войти</button>
+</header>
+<div class="content-container">
+    <nav class="sidebar">
+        <ul>
+            <li><a href="#" onclick="showMyTracks()">Мои треки</a></li>
+            <li><a href="#" onclick="showPlaylists()">Плейлисты</a></li>
+            <li><a href="#" onclick="showCollections()">Подборки</a></li>
+            <li><a href="#" onclick="showNewReleases()">Новинки</a></li>
+        </ul>
+    </nav>
+    <section class="content">
+        <div id="my-tracks" class="block">
+            <!-- Динамический контент будет загружен здесь -->
+        </div>
+        <div id="playlists" class="block">
+            <!-- Динамический контент будет загружен здесь -->
+        </div>
+        <div id="collections" class="block">
+            <!-- Динамический контент будет загружен здесь -->
+        </div>
+        <div id="new-releases" class="block">
+            <!-- Динамический контент будет загружен здесь -->
+        </div>
+    </section>
+</div>
+<footer>
+    <!-- Текущий трек -->
+</footer>
+<script src="script.js"></script>
+</body>
+</html>
