@@ -1,0 +1,200 @@
+@startuml
+
+actor User
+boundary SearchComponent
+boundary ResponseComponent
+database databaseTrack
+control delete
+boundary UserWindow
+
+User -> SearchComponent : ввод поисковой строки
+SearchComponent -> databaseTrack : search()
+
+alt отправлен запрос в БД
+  databaseTrack -> ResponseComponent : showListTrack()
+  SearchComponent -> delete : активация элемента интерфейса
+  User -> delete : click()
+  opt кнопка "delete" активирована
+    activate delete
+    delete -> SearchComponent : очистка поисковой строки
+    delete -> ResponseComponent : очистка компонента со списком треков
+    deactivate delete
+  end
+else запрос отклонен
+  databaseTrack -> UserWindow: Сообщение об ошибке
+end
+
+@enduml
+
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+@startuml
+
+actor User
+boundary ButtonPlay
+boundary Player
+entity Track
+database databaseTrack
+boundary UserWindow
+
+User -> ButtonPlay : click()
+ButtonPlay -> Track : getName()
+Track -> databaseTrack : запрос данных
+alt отправлен запрос данных в БД
+  databaseTrack -> Track : результат работы БД
+  Track -> Player : передача управления треком плееру, trackPlay()
+else запрос не был обработан
+  Track -> UserWindow : сообщение об ошибке
+end
+
+@enduml
+
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+@startuml
+
+actor User
+boundary Player
+entity Track
+database databaseTrack
+boundary LeftButton
+boundary RightButton
+
+alt пользователь хочет нажать на кнопку RightButton
+  User -> RightButton : click()
+  RightButton -> Track : getName()
+  Track -> databaseTrack : запрос данных
+  databaseTrack -> Track : результат работы БД
+  Track -> Player : передача управления треком плееру, trackPlay()
+else пользователь хочет нажать на кнопку LeftButton
+  User -> LeftButton : click()
+  alt durationComponent(время текущего проигрывания) < 15 сек
+    LeftButton -> Track : getName()
+    Track -> databaseTrack : запрос данных
+    databaseTrack -> Track : результат работы БД
+    Track -> Player : передача управления треком плееру, trackPlay()
+  else durationComponent(время текущего проигрывания) > 15 сек
+    LeftButton -> Player : trackRewind()
+  end
+end
+@enduml
+
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+@startuml
+
+actor Artist
+boundary LibraryArtistComponent
+entity Track
+database databaseTrack
+boundary ArtistWindow
+control AddTrack
+
+Artist -> AddTrack : click()
+alt artist нажал на кнопку с добавлением трека 
+  LibraryArtistComponent -> Track : loadTrackToApp() 
+  alt трек успешно загружен
+      Track -> databaseTrack : загрузка трека в БД 
+  else трек не был успешно загружен
+    ArtistWindow -> ArtistWindow: сообщение об ошибке
+  end
+else artist нажал на другую область
+  Artist -> ArtistWindow : click()
+  ArtistWindow -> ArtistWindow : открытие другой области
+end
+@enduml
+
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+@startuml
+actor Artist
+boundary ArtistComponent
+entity Avatar
+boundary RemoveAvatarComponent
+boundary LoadAvatarComponent
+database DatabaseArtist
+boundary ArtistWindow
+control removeAvatar
+control deleteAvatar
+control loadAvatar
+
+
+Artist -> removeAvatar : click()
+
+alt Artist нажал на кнопку с изменить аватар
+ 
+  removeAvatar -> RemoveAvatarComponent 
+  
+  RemoveAvatarComponent -> loadAvatar: click()
+  loadAvatar -> LoadAvatarComponent
+    alt Artist выбрал аватар и нажал на кнопку загрузить
+    
+      alt Удаление старого и загрузка нового аватара
+        
+        LoadAvatarComponent -> DatabaseArtist: request
+        DatabaseArtist -> ArtistComponent: response
+        ArtistComponent -> Avatar
+        
+      else удаление старого и загрузка нового аватара не был успешно завершён
+        LoadAvatarComponent -> DatabaseArtist: 400 ошибка загрузки
+        DatabaseArtist -> ArtistComponent: 500 ошибка загрузки компонента
+      end
+    
+  else Artist нажал на другую область
+    RemoveAvatarComponent -> RemoveAvatarComponent: открытие другой области
+  end
+  
+  alt Artist нажал на кнопку удалить аватар
+    RemoveAvatarComponent -> deleteAvatar: click()
+    
+    alt Удаление старого и загрузка нового аватара
+
+      deleteAvatar -> DatabaseArtist: 400 ошибка загрузки
+      DatabaseArtist -> ArtistComponent: response
+      ArtistComponent -> Avatar
+      
+    else удаление старого и загрузка нового аватара не был успешно завершён
+      
+      deleteAvatar -> DatabaseArtist: 400 ошибка загрузки
+      DatabaseArtist -> ArtistComponent: 500 ошибка загрузки компонента
+    end
+    
+  else Artist нажал на другую область
+    RemoveAvatarComponent -> RemoveAvatarComponent: открытие другой области
+  end 
+  
+else Atist нажал на другую область
+  Artist-> ArtistWindow: click()
+  ArtistWindow-> ArtistWindow: открытие другой области 
+end
+@enduml
+
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+@startuml
+actor Artist
+boundary ArtistComponent
+database databaseArtist
+boundary ArtistWindow
+control loadAvatar
+
+Artist -> loadAvatar: click()
+alt Artist нажал на кнопку с загрузить аватар
+  
+  loadAvatar -> ArtistComponent: loadAvatar
+
+  alt загрузка аватара исполнителя
+    
+    ArtistComponent -> databaseArtist: request
+    databaseArtist -> ArtistComponent: response
+
+  else Аватар исполнителя не был успешно загружен
+    ArtistComponent -> databaseArtist: 400 ошибка загрузки аватара
+    databaseArtist -> ArtistComponent: 500 ошибка загрузки аватара
+  end
+  
+else Atist нажал на другую область
+  Artist-> ArtistWindow: click()
+  ArtistWindow-> ArtistWindow: открытие другой области 
+end
+@enduml

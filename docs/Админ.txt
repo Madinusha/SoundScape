@@ -1,0 +1,48 @@
+@startuml
+
+actor Admin as "Админ" #Blue/Pink;line:blue/pink;line.bold
+
+"Ввод логина" as (Login)
+"Ввод пароля" as (Password)
+
+
+rectangle "Окно авторизации" as AutorisationWindow{
+usecase "Ввод данных" as AutorisationInput
+usecase "Выход" as AutorisationExit
+}
+AutorisationInput <.. Login:<<extend>>
+AutorisationInput <.. Password:<<extend>>
+Admin -- AutorisationInput #line:lightseagreen;line.bold:lightseagreen
+Admin -- AutorisationExit #line:lightseagreen;line.bold:lightseagreen
+AutorisationInput -[hidden]- AutorisationExit
+
+
+
+rectangle "Панель администратора" as AdminPanel{
+usecase "Изменить роль пользователя\исполнителя" as ChangeRole
+usecase "Заблокировать пользователя\исполнителя" as BlockUser
+usecase "Удалить аккаунт пользователя" as DeleteUser
+usecase "Посмотреть статистику" as CheckStatistics
+ChangeRole -[hidden]- BlockUser
+BlockUser -[hidden]- DeleteUser
+DeleteUser -[hidden]- CheckStatistics
+}
+Admin -- ChangeRole #line:lightblue;line.bold:lightblue
+Admin -- BlockUser #line:lightblue;line.bold:lightblue
+Admin -- DeleteUser #line:lightblue;line.bold:lightblue
+Admin -- CheckStatistics #line:lightblue;line.bold:lightblue
+
+
+rectangle "Настройки" as Settings{
+usecase "Выбрать темы" as ThemeSwitch
+usecase "Выйти из аккаунта" as ToExitFromAccount
+usecase "Удалить аккаунт" as ToDeleteAccount
+}
+ThemeSwitch -[hidden]- ToExitFromAccount
+ToExitFromAccount -[hidden]- ToDeleteAccount
+Admin -- ThemeSwitch #line:lightsalmon;line.bold:lightsalmon
+Admin -- ToExitFromAccount #line:lightsalmon;line.bold:lightsalmon
+Admin -- ToDeleteAccount #line:lightsalmon;line.bold:lightsalmon
+
+
+@enduml

@@ -1,0 +1,64 @@
+@startuml
+
+
+actor Artist as "Исполнитель" #Blue/Pink;line:blue/pink;line.bold
+
+"Ввод логина" as (Login)
+"Ввод пароля" as (Password)
+
+
+rectangle "Окно авторизации" as AutorisationWindow{
+usecase "Ввод данных" as AutorisationInput
+usecase "Выход" as AutorisationExit
+}
+AutorisationInput <.. Login:<<extend>>
+AutorisationInput <.. Password:<<extend>>
+AutorisationInput -[hidden]- AutorisationExit
+Artist -- AutorisationInput #line:lightseagreen;line.bold:lightseagreen
+Artist -- AutorisationExit #line:lightseagreen;line.bold:lightseagreen
+
+
+
+rectangle "Окно исполнителя" as ArtistWindow{
+usecase "Создать альбом" as AlbumCreate
+usecase "Удалить альбом" as AlbumDelete
+usecase "Добавить трек в альбом" as AddTrackToAlbum
+usecase "Удалить трек из альбома" as DeleteTrackFromAlbum
+usecase "Добавить трек на площадку" as AddTrackToApp
+usecase "Удалить трек с площадки" as DeleteTrackFromApp
+usecase "Загрузить аватар" as LoadPicture
+usecase "Редактировать аватар" as ChangePicture
+usecase "Редактировать информацию о себе " as ChangeInformation
+}
+Artist -right- AlbumCreate #line:lightblue;line.bold:lightblue
+Artist -right- AlbumDelete #line:lightblue;line.bold:lightblue
+Artist -right- AddTrackToAlbum #line:lightblue;line.bold:lightblue
+Artist -right- DeleteTrackFromAlbum #line:lightblue;line.bold:lightblue
+Artist -right- AddTrackToApp #line:lightblue;line.bold:lightblue
+Artist -right- DeleteTrackFromApp #line:lightblue;line.bold:lightblue
+Artist -right- LoadPicture #line:lightblue;line.bold:lightblue
+Artist -right- ChangePicture #line:lightblue;line.bold:lightblue
+Artist -right- ChangeInformation #line:lightblue;line.bold:lightblue
+
+
+AlbumCreate -[hidden]- AlbumDelete
+AlbumDelete -[hidden]- AddTrackToAlbum
+AddTrackToAlbum -[hidden]- DeleteTrackFromAlbum
+DeleteTrackFromAlbum -[hidden]- AddTrackToApp
+AddTrackToApp -[hidden]- DeleteTrackFromApp
+DeleteTrackFromApp -[hidden]- LoadPicture
+LoadPicture -[hidden]- ChangePicture
+ChangePicture -[hidden]- ChangeInformation
+
+rectangle "Настройки" as Settings{
+usecase "Выбрать тему" as ThemeSwitch
+usecase "Выйти из аккаунта" as ToExitFromAccount
+usecase "Удалить аккаунт" as ToDeleteAccount
+}
+ThemeSwitch -[hidden]- ToExitFromAccount
+ToExitFromAccount -[hidden]- ToDeleteAccount
+Artist -- ThemeSwitch #line:lightsalmon;line.bold:lightsalmon
+Artist -- ToExitFromAccount #line:lightsalmon;line.bold:lightsalmon
+Artist -- ToDeleteAccount #line:lightsalmon;line.bold:lightsalmon
+
+@enduml

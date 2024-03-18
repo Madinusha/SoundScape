@@ -1,0 +1,213 @@
+@startuml
+
+
+class User
+{
+  #Track[] tracks
+  #Album[] albums
+  #Playlist[] playlists
+  #String name
+  #String email
+  #String password
+  #bool isBlocked
+  #String role
+  #String getName()
+  #void setName(String name)
+  #String getEmail()
+  #void setEmail(String email)
+  #String getPassword()
+  #void setPassword(String password)
+}
+
+class Admin
+{
+  -Track[] tracks = null
+  -Album[] albums = null
+  -Playlist[] playlists = null
+  -bool isBlocked = false
+}
+
+class Artist
+{
+  -Playlist[] playlists = null
+  -String avatar
+  -String text
+  -String[] genres
+  -String[] getGenres()
+  -void setGenres(String[] genres)
+}
+
+class Track
+{
+  -String name
+  -String genre
+  -String artist
+  -String songPicture
+  -String audio
+  -Time duration
+  
+  -String getName()
+  -void setName(String name)
+  -String getGenre()
+  -void setGenre(String genre)
+  -String getArtist()
+  -void setArtist(String artist)
+  -void setSongPicture(String songPicture)
+  -String getAudio()
+  -void setAudio(String audio)
+  -Time getDuration()
+}
+
+class Playlist
+{
+  -Track[] tracks
+  -String name
+  -String description
+  -String playlistPicture
+}
+
+class Album
+{
+  -Track[] tracks
+  -String name
+  -String description
+  -String albumPicture
+}
+
+interface TrackContainer
+{
+   void addTrackToPlaylist(Track track, Playlist playlist)
+   void deleteTrackFromPlaylist(Track track, Playlist playlist)
+   Track[] getTracks()
+   String getName()
+   void setName(String name)
+   String getDescription()
+   void setDescription(String description)
+   void setPlaylistPicture(String playlistPicture)
+}
+
+class Player
+{
+  -Track track
+  -void trackPlay(Track track)
+  -void trackPause(Track track)
+  -void trackRewind(Track track)
+  -void changeVolumeLevel(Track track)
+}
+
+
+class UserWindow
+{
+  -User user 
+  
+}
+
+class ArtistWindow
+{
+  -Artist artist
+}
+
+class AdminWindow
+{
+  -void blockUser(User user)
+  -void deleteUser(User user)
+  -void changeRole(User user)
+  -void getStatistics()
+}
+
+class SearchComponent
+{
+  -String response
+  -void deleteResponse()
+}
+
+class ResponseComponent
+{
+  -void search(String response)
+  -void showListTrack()
+  -void addTrackToLibrary(Track track)
+  -void addAlbumToLibrary(Album album)
+}
+
+class SettingsComponent
+{
+  -User user
+  -void deleteAccount()
+  -void swithTheme()
+  -void exit()
+}
+
+class RecomendationWindow
+{
+  -User user
+  -void searchTrackByGenre(Track[] tracks)
+  -void creatingPlaylistByGenres()
+  -void showRecomendationPlaylists()
+}
+
+class LibraryWindow
+{
+  -User user 
+  -void createPlaylist(Track[] tracks)
+  -void deleteAlbumFromLibrary(Album album)
+  -void deletePlaylistFromLibrary(Playlist playlist)
+  -void deleteTrackFromLibrary(Track track)
+}
+
+class LibraryArtistComponent
+{
+  -void loadTrackToApp(Track track)
+  -void deleteTrackFromApp(Track track)
+  -void createAlbum(Track[] tracks)
+  -void deleteAlbumFromApp(Album album)
+}
+
+class AutorisationOrRegestrationWindow
+{
+  -void setEmail(String email)
+  -void setPassword(String password)
+  -void checkEmailAndPassword(String email, String password)
+  -void changeFunction()
+  -void createUser(String email, String password)
+}
+
+class AvatarComponent
+{
+  -Atrist artist
+  -void loadAvatar(String avatar)
+  -void deleteAvatar(String avatar)
+}
+
+class InformationComponent
+{
+  -Artist artist
+  -void changeInformation(String text)
+}
+
+Admin --|> User
+Artist --|> User
+Artist --* ArtistWindow : contains
+User --* UserWindow : contains
+Playlist --|> TrackContainer
+Album --|> TrackContainer
+Admin --* AdminWindow : contains
+Playlist o-- Track : agregation
+Album o-- Track : agregation
+Player <-- Track : play
+Track --> LibraryArtistComponent
+Album --> LibraryArtistComponent
+Track --> LibraryWindow
+Playlist --> LibraryWindow
+Album --> LibraryWindow
+SearchComponent *-- ResponseComponent : contains
+UserWindow o-- SearchComponent : agregation
+SettingsComponent --o UserWindow : agregation
+SettingsComponent --o ArtistWindow : agregation
+RecomendationWindow --o UserWindow : agregation
+LibraryWindow --o UserWindow : agregation
+LibraryArtistComponent --o ArtistWindow : agregation
+AutorisationOrRegestrationWindow --> User : autorisation or registration
+AvatarComponent --o ArtistWindow : agregation
+InformationComponent --o ArtistWindow : agregation
+
+@enduml

@@ -1,0 +1,148 @@
+@startuml
+scale 350 width
+[*] --> Play
+state Play{
+  Play: do trackPlay()
+}
+state Pause{
+
+}
+
+state c <<choice>>
+state Rewind{
+  Rewind: trackRewind()
+}
+state Switch{
+  Switch: trackChange()
+}
+c -->  Rewind: удерживание
+c --> Switch : нажатие
+
+state VolumeLevel{
+}
+Play --> Pause : trackPause()
+Play --> c : click()
+Play --> Switch
+Play --> VolumeLevel : changeVolumeLevel()
+Pause --> Play : trackPlay()
+Pause --> c : click()
+Pause --> VolumeLevel : changeVolumeLevel()
+
+@enduml
+
+
+
+
+
+######################################################################################
+
+@startuml
+[*] --> ArtistWindow
+
+state ArtistWindow{
+  
+}
+
+state InformationComponent{
+  
+}
+
+
+state AvatarComponent{
+
+}
+
+state SettingsComponent{
+}
+
+state LibraryArtistComponent{
+}
+
+state Artist{
+}
+
+state Track{
+}
+
+state Album{
+}
+
+state AutorizationOrRegestrationWindow{
+}
+
+ArtistWindow -down-> InformationComponent: clickOnButton()
+ArtistWindow -down-> AvatarComponent: clickOnButton()
+ArtistWindow -> SettingsComponent: clickOnButton()
+ArtistWindow -left-> LibraryArtistComponent: clickOnButton()
+
+AvatarComponent -down-> Artist: deleteAvatar()
+AvatarComponent -down-> Artist: loadAvatar()
+
+LibraryArtistComponent -left-> Track: loadTrackToApp()
+LibraryArtistComponent -left-> Track: deleteTrackFromApp()
+LibraryArtistComponent -down-> Album: createAlbum()
+LibraryArtistComponent -down-> Album: deleteAlbumFromApp()
+
+InformationComponent -down-> Artist: changeInformation()
+
+SettingsComponent -> SettingsComponent: switchTheme()
+SettingsComponent -down-> AutorizationOrRegestrationWindow: exit()
+SettingsComponent -down-> AutorizationOrRegestrationWindow: deleteAccount()
+
+
+
+@enduml
+
+###########################################################################################################
+
+@startuml
+[*] --> UserWindow
+
+state UserWindow{
+  
+}
+
+state RecomendationWindow{
+   RecomendationWindow: do searchTrackByGenre()
+   RecomendationWindow: do creatingPlaylistByGenres()
+   RecomendationWindow: do showRecomendationPlaylist()
+}
+
+state LibraryWindow{
+}
+
+state SettingsComponent{
+}
+
+state SearchComponent{
+}
+
+
+state ResponseComponent{
+}
+
+state AutorizationOrRegestrationWindow{
+}
+
+UserWindow -down-> RecomendationWindow: clickOnButton()
+UserWindow -down-> LibraryWindow: clickOnButton()
+UserWindow -down-> SettingsComponent: clickOnButton()
+UserWindow -left-> SearchComponent: ввод поисковой строки
+
+SettingsComponent -> SettingsComponent: switchTheme()
+SettingsComponent -down-> AutorizationOrRegestrationWindow: exit()
+SettingsComponent -down-> AutorizationOrRegestrationWindow: deleteAccount()
+
+LibraryWindow -> LibraryWindow: createPlaylist()
+LibraryWindow -> LibraryWindow: deleteAlbumFromLibrary()
+LibraryWindow -> LibraryWindow: deletePlaylistFromLibrary()
+LibraryWindow -> LibraryWindow: deleteTrackFromLibrary()
+
+SearchComponent -> SearchComponent: deleteResponse()
+SearchComponent -down-> ResponseComponent: search()
+
+ResponseComponent -> ResponseComponent: showListTrack()
+ResponseComponent -> ResponseComponent: addTrackToLibrary()
+
+
+@enduml

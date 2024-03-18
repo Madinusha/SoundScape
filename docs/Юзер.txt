@@ -1,0 +1,158 @@
+@startuml
+
+actor User as "Пользователь" #Blue/Pink;line:blue/pink;line.bold
+actor RegUser as "Зарегестрированный пользователь" #Red/Yellow;line:red/yellow;line.bold
+actor NonRegUser as "Незарегестрированный пользователь" #Red/Yellow;line:red/yellow;line.bold
+RegUser -down-> User #line:black;line.bold:black
+NonRegUser -down-> User #line:black;line.bold:black
+
+
+"Ввод логина" as (Login)
+"Ввод пароля" as (Password)
+
+rectangle "Окно регистрации" as RegistrationWindow{
+usecase "Ввод данных" as RegistrationInput
+usecase "Выход" as RegistrationExit
+}
+RegistrationInput <.. Login #red:<<extend>> 
+RegistrationInput <.. Password #red:<<extend>> 
+User -up- RegistrationInput #line:red;line.bold:red
+User -up- RegistrationExit #line:red;line.bold:red
+RegistrationInput -[hidden]- RegistrationExit
+
+
+rectangle "Окно авторизации" as AutorisationWindow{
+usecase "Ввод данных" as AutorisationInput
+usecase "Выход" as AutorisationExit
+}
+AutorisationInput <.. Login #blue:<<extend>>
+AutorisationInput <.. Password #blue:<<extend>>
+AutorisationInput -[hidden]- AutorisationExit
+User -up- AutorisationInput #line:blue;line.bold:blue
+User -up- AutorisationExit #line:blue;line.bold:blue
+
+
+"Пауза" as (Pause)
+rectangle "Библиотека" as Library{
+usecase "Воспроизвести альбом" as AlbumPlay
+usecase "Воспроизвести плейлист" as PlayListPlay
+usecase "Удалить альбом" as AlbumDelete
+usecase "Создать плейлист" as PlaylistCreate
+usecase "Добавить трек в плейлист" as AddTrackToPlaylist
+usecase "Удалить трек из плейлиста" as DeleteTrackFromPlaylist
+usecase "Удалить плейлист" as PlaylistDelete
+usecase "Воспроизвести трек" as TrackPlay
+usecase "Удалить трек" as TrackDelete
+usecase "Посмотреть карточку исполнителя трека" as ToCheckCardOfArtist
+}
+User -up- AlbumPlay #line:orange;line.bold:orange
+User -up- AlbumDelete #line:orange;line.bold:orange
+User -up- PlaylistCreate #line:orange;line.bold:orange
+User -up- AddTrackToPlaylist #line:orange;line.bold:orange
+User -up- DeleteTrackFromPlaylist #line:orange;line.bold:orange
+User -up- PlaylistDelete #line:orange;line.bold:orange
+User -up- TrackPlay #line:orange;line.bold:orange
+User -up- TrackDelete #line:orange;line.bold:orange
+User -up- ToCheckCardOfArtist #line:orange;line.bold:orange
+User -up- PlayListPlay #line:orange;line.bold:orange
+TrackPlay <.. Pause:<<include>>
+AlbumPlay <.. Pause:<<include>>
+PlayListPlay <.. Pause:<<include>>
+
+rectangle "Подкасты" as Podcasts{
+usecase "Воспроизвести подкаст" as PodcastPlay
+usecase "Посмотреть карточку исполнителя" as ToCheckCardOfArtistPod
+}
+PodcastPlay -[hidden]- ToCheckCardOfArtistPod
+User -down- PodcastPlay #line:lightseagreen;line.bold:lightseagreen
+User -down- ToCheckCardOfArtistPod #line:lightseagreen;line.bold:lightseagreen
+PodcastPlay <.. Pause:<<include>>
+
+rectangle "Рекоммендации" as Recommendations{
+usecase "Воспроизвести трек" as TrackPlayRec
+usecase "Посмотреть карточку исполнителя трека" as ToCheckCardOfArtistRec
+}
+TrackPlayRec -[hidden]- ToCheckCardOfArtistRec
+User -down- TrackPlayRec #line:lightblue;line.bold:lightblue
+User -down- ToCheckCardOfArtistRec #line:lightblue;line.bold:lightblue
+
+
+
+rectangle "Главная" as Main{
+rectangle "Поиск" as Search{
+usecase "Найти трек" as FindTrack
+usecase "Найти альбом" as FindAlbum
+usecase "Найти исполнителя" as FindArtist
+}
+rectangle "Страница треков" as TrackList{
+usecase "Воспроизвести трек" as TrackPlayTL
+usecase "Посмотреть карточку исполнителя трека" as ToCheckCardOfArtistT
+usecase "Добавить трек\альбом" as AddTrack
+}
+}
+TrackPlayTL -[hidden]- ToCheckCardOfArtistT
+FindTrack -[hidden]- FindAlbum
+FindAlbum -[hidden]- FindArtist
+User -down- FindTrack #line:lightsalmon;line.bold:lightsalmon
+User -down- FindArtist #line:lightsalmon;line.bold:lightsalmon
+User -down- FindAlbum #line:lightsalmon;line.bold:lightsalmon
+TrackPlayTL -[hidden]- ToCheckCardOfArtistT
+ToCheckCardOfArtistT -[hidden]- AddTrack
+User -- TrackPlayTL #line:gold;line.bold:gold
+User -- ToCheckCardOfArtistT #line:gold;line.bold:gold
+User -- AddTrack #line:gold;line.bold:gold
+TrackPlayTL <.. Pause:<<include>>
+FindArtist -[hidden]- TrackList
+
+rectangle "Плеер" as Player{
+usecase "Воспроизвести трек" as TrackPlayP
+usecase "Посмотреть карточку исполнителя трека" as ToCheckCardOfArtistTLP
+usecase "Перемотать трек" as TrackRewind
+usecase "Переключить трек" as TrackSkip
+}
+TrackPlayP -[hidden]- ToCheckCardOfArtistTLP
+ToCheckCardOfArtistTLP -[hidden]- TrackRewind
+TrackRewind -[hidden]- TrackSkip
+User -down- TrackPlayP #line:pink;line.bold:pink
+User -down- ToCheckCardOfArtistTLP #line:pink;line.bold:pink
+User -down- TrackRewind #line:pink;line.bold:pink
+User -down- TrackSkip #line:pink;line.bold:pink
+TrackPlayP <.. Pause:<<include>>
+
+rectangle "Настройки" as Settings{
+usecase "Выбрать тему" as ThemeSwitch
+usecase "Выйти из аккаунта" as ToExitFromAccount
+usecase "Удалить аккаунт" as ToDeleteAccount
+}
+ThemeSwitch -[hidden]- ToExitFromAccount
+ToExitFromAccount -[hidden]- ToDeleteAccount
+User -down- ThemeSwitch #line:lightgreen;line.bold:lightgreen
+User -down- ToExitFromAccount #line:lightgreen;line.bold:lightgreen
+User -down- ToDeleteAccount #line:lightgreen;line.bold:lightgreen
+
+
+Library -[hidden]- User
+Library -[hidden]- NonRegUser
+Library -[hidden]- RegUser
+Library -[hidden]- AutorisationWindow
+Library -[hidden]- RegistrationWindow
+
+User -[hidden]- Podcasts
+User -[hidden]- Recommendations
+User -[hidden]- Search
+User -[hidden]- TrackList
+User -[hidden]- Settings
+
+AutorisationWindow ..> RegistrationWindow #red :<<include>>
+Library ..> AutorisationWindow #blue:<<include>>
+Recommendations ..> AutorisationWindow #blue:<<include>>
+Podcasts ..> AutorisationWindow #blue:<<include>>
+Search ..> AutorisationWindow #blue:<<include>>
+TrackList ..> AutorisationWindow #blue:<<include>>
+Player ..> AutorisationWindow #blue:<<include>>
+Settings ..> AutorisationWindow #blue:<<include>>
+Pause -[hidden]- Library
+Library -[hidden]- Player
+Pause -[hidden]- User
+
+@enduml
