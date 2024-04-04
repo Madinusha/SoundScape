@@ -81,8 +81,8 @@ function displayCollections() {
 }
 
 function showRegisterPage() {
-    console.log("dfkanskjna")
-    window.location.href = 'registration.html';
+    console.log("here");
+    window.location.href = '/registration';
 }
 
 function showMyTracks() {

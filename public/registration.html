@@ -4,15 +4,15 @@
 <body>
 <div class="container" id="container">
   <div class="form-container sign-up-container">
-    <form action="#">
+    <form action="#" id="registrationForm">
       <link rel="stylesheet" href="registration.css">
       <meta charset="UTF-8">
 
       <h1>Создайте аккаунт</h1>
       <input type="text" placeholder="Имя" />
-      <input type="email" placeholder="Логин" />
-      <input type="password" placeholder="Пароль" />
-      <button>Зарегистрироваться</button>
+      <input type="email" id="email" placeholder="Логин" />
+      <input type="password" id="password" placeholder="Пароль" />
+      <button type="submit">Зарегистрироваться</button>
     </form>
   </div>
   <div class="form-container sign-in-container">
@@ -43,6 +43,7 @@
 <footer>
 
 </footer>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="registration.js"></script>
 </body>
 </html>
