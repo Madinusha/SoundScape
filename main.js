@@ -80,6 +80,10 @@ function displayCollections() {
     });
 }
 
+function showRegisterPage() {
+    console.log("dfkanskjna")
+    window.location.href = 'registration.html';
+}
 
 function showMyTracks() {
     hideAllBlocks();
