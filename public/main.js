@@ -82,7 +82,7 @@ function displayCollections() {
 
 function showRegisterPage() {
     console.log("here");
-    window.location.href = 'registration.html';
+    window.location.href = '/registration';
 }
 
 function showMyTracks() {
@@ -119,6 +119,37 @@ function hideAllBlocks() {
         block.style.display = 'none';
     });
 }
+
+function goToProfile() {
+  window.location.href = '/registration';
+}
+
+
+const sidebar = document.getElementById('sidebar');
+const collapseBtn = document.getElementById('collapseBtn');
+let isCollapsed = false; // Переменная для отслеживания состояния ширины навбара
+
+function toggleSidebar() {
+    isCollapsed = !isCollapsed; // Инвертируем текущее состояние
+
+    if (isCollapsed) {
+        sidebar.classList.add('collapsed');
+        sidebar.style.width = '1.5em'; // Устанавливаем ширину навбара в 20 пикселей
+    } else {
+        sidebar.classList.remove('collapsed');
+        sidebar.style.width = '15vw'; // Устанавливаем ширину навбара в 0.2vw
+    }
+}
+
+// Устанавливаем ширину навбара при загрузке страницы
+window.onload = function() {
+    sidebar.style.width = '15vw';
+    checkWidth();
+};
+
+// Вызываем функцию при изменении размеров окна
+window.addEventListener('resize', checkWidth);
+
 
 // Initial display
 showMyTracks();

@@ -18,6 +18,10 @@ header {
     color: white;
     font-weight: bold;
 }
+.header a {
+    text-decoration: none;
+}
+
 
 input[type="text"] {
     padding: 5px;
@@ -27,7 +31,7 @@ input[type="text"] {
 .login-btn {
     padding: 5px 10px;
     border-radius: 5px;
-    background-color: #7366bd;
+    background: linear-gradient(to right, #7366bd, #FF416C);
     color: white;
     border: none;
     cursor: pointer;
@@ -44,17 +48,19 @@ input[type="text"] {
     margin-left: 10px;
     margin-top: 10px;
     background: linear-gradient(to right, #7366bd, #FF416C);
-    width: 200px;
+    /*width: 200px;*/
     padding: 20px;
     height: 90vh;
 }
 
 .sidebar ul {
+    text-align: left;
     list-style-type: none;
     padding: 0;
 }
 
 .sidebar ul li {
+    list-style: none;
     margin-bottom: 10px;
 }
 
@@ -63,6 +69,31 @@ input[type="text"] {
     text-decoration: none;
 }
 
+.sidebar.collapsed ul li a {
+    display: none;
+}
+.sidebar img {
+    width: 1.5em; height: 1.5em;
+    margin-right: 1em;
+    filter: invert(100%);
+}
+.divider {
+    border-top: 1px solid #ccc; /* Горизонтальный разделитель */
+    width: 100%; /* Ширина разделителя */
+    margin: 10px 0; /* Отступы сверху и снизу для разделителя */
+}
+
+
+#collapseBtn {
+    background: url("images/hamburger_button.png");
+    filter: invert(100%);
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 1.5em;
+    height: 1.5em;
+    border: none;
+    padding: 0;
+}
 .content {
     flex: 1;
     padding: 20px;
@@ -90,6 +121,7 @@ input[type="text"] {
     width: 50px; /* Задайте ширину и высоту вашей обложки */
     height: 50px;
     margin-right: 10px;
+    border-radius: 5px;
 }
 
 /* Стили для информации о треке (название, исполнитель) */
@@ -152,6 +184,7 @@ input[type="text"] {
     width: 5em;
     height: 5em;
     margin-right: 10px;
+    border-radius: 5px;
 }
 
 /* Стили для кнопок внутри плейлиста */
@@ -164,4 +197,26 @@ input[type="text"] {
     padding: 5px 10px;
     cursor: pointer;
 }
+
+.avatar-button {
+  width: 1.5em;
+  height: 1.5em;
+  border-radius: 50%;
+  font-size: 24px;
+  color: white;
+  background: linear-gradient(to right, #7366bd, #FF416C); /* Цвет фона кнопки */
+  border: none;
+  cursor: pointer;
+  outline: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.avatar-button:hover {
+  background-color: #0056b3; /* Цвет фона кнопки при наведении курсора */
+}
+.logo img {
+    filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg);
+ }
 
