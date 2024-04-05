@@ -82,7 +82,7 @@ function displayCollections() {
 
 function showRegisterPage() {
     console.log("here");
-    window.location.href = '/registration';
+    window.location.href = 'registration.html';
 }
 
 function showMyTracks() {
