@@ -6,9 +6,13 @@ const myTracks = [
 ];
 
 const playlists = [
-    { title: "Плейлист 1", author: "Автор 1", cover: "images/cover1.jpg"},
-    { title: "Плейлист 2", author: "Автор 2", cover: "images/cover2.jpg"},
-    { title: "Плейлист 3", author: "Автор 3", cover: "images/cover3.jpg"}
+    { title: "Permission to dance", author: "BTS", cover: "images/cover1.jpg"},
+    { title: "DNA", author: "BTS", cover: "images/cover2.jpg"},
+    { title: "Лимонад", author: "ЛСП", cover: "images/cover3.jpg"},
+    { title: "Permission to dance", author: "BTS", cover: "images/cover1.jpg"},
+    { title: "DNA", author: "BTS", cover: "images/cover2.jpg"},
+    { title: "DNA", author: "BTS", cover: "images/cover2.jpg"},
+    { title: "Лимонад", author: "ЛСП", cover: "images/cover3.jpg"}
 ];
 
 const collections = [
@@ -45,13 +49,13 @@ function displayMyTracks() {
 
 // Функция отображения плейлистов
 function displayPlaylists() {
-    const playlistsBlock = document.getElementById('playlists');
+    const playlistsBlock = document.getElementById('playlists-container');
     playlistsBlock.innerHTML = '';
     playlists.forEach(playlist => {
         const playlistElement = document.createElement('div');
         playlistElement.classList.add('playlist');
         playlistElement.innerHTML = `
-            <div class="playlist-info">
+            <div class="playlist">
                 <img src="${playlist.cover}" alt="Обложка плейлиста">
                 <div class="title">${playlist.title}</div>
                 <div class="author">${playlist.author}</div>
@@ -81,7 +85,6 @@ function displayCollections() {
 }
 
 function showRegisterPage() {
-    console.log("here");
     window.location.href = '/registration';
 }
 
@@ -91,14 +94,12 @@ function showMyTracks() {
     document.getElementById('my-tracks').style.display = 'block';
 }
 
-// Function to show playlists
 function showPlaylists() {
     hideAllBlocks();
     displayPlaylists();
     document.getElementById('playlists').style.display = 'block';
 }
 
-// Function to show collections
 function showCollections() {
     hideAllBlocks();
     displayCollections();
@@ -106,15 +107,25 @@ function showCollections() {
     // Implement functionality to show collections
 }
 
-// Function to show new releases
 function showNewReleases() {
     hideAllBlocks();
-    // Implement functionality to show new releases
+    addPlaylistsSection("Новинки недели");
+    addPlaylistsSection("Им месяц");
 }
 
-// Function to hide all content blocks
+function showMainPage() {
+    hideAllBlocks();
+    addPlaylistsSection("Свежие хиты");
+    addPlaylistsSection("Рекомендации для вас");
+    addPlaylistsSection("Сегодня в тренде");
+}
+
 function hideAllBlocks() {
     const blocks = document.querySelectorAll('.block');
+    const sections = document.querySelectorAll('.section');
+    sections.forEach(section => {
+            section.style.display = 'none';
+        });
     blocks.forEach(block => {
         block.style.display = 'none';
     });
@@ -134,22 +145,74 @@ function toggleSidebar() {
 
     if (isCollapsed) {
         sidebar.classList.add('collapsed');
-        sidebar.style.width = '1.5em'; // Устанавливаем ширину навбара в 20 пикселей
+        var collapseBtnWidth = document.getElementById('collapseBtn').offsetWidth; // Получаем ширину кнопки collapseBtn
+        sidebar.style.width = (collapseBtnWidth/16 + 2) + 'em';
+
     } else {
         sidebar.classList.remove('collapsed');
-        sidebar.style.width = '15vw'; // Устанавливаем ширину навбара в 0.2vw
+        sidebar.style.width = '11em';
     }
 }
 
-// Устанавливаем ширину навбара при загрузке страницы
-window.onload = function() {
-    sidebar.style.width = '15vw';
-    checkWidth();
-};
+function handleMenuItemClick(event) {
+    // Удаляем выделение у всех элементов меню
+    var menuItems = document.querySelectorAll('.menu-item');
+    menuItems.forEach(function(item) {
+        item.classList.remove('selected');
+    });
 
-// Вызываем функцию при изменении размеров окна
-window.addEventListener('resize', checkWidth);
+    // Выделяем текущий элемент меню
+    var menuItem = event.currentTarget;
+    menuItem.classList.add('selected');
 
 
-// Initial display
-showMyTracks();
+    var menuItem = event.currentTarget.parentNode;
+    var link = menuItem.querySelector('a');
+    link.onclick();
+}
+
+function addPlaylistsSection(Title) {
+    const freshHitsSection = document.createElement('div');
+    freshHitsSection.classList.add('section');
+
+    const sectionTitle = document.createElement('h2');
+    sectionTitle.textContent = Title;
+    freshHitsSection.appendChild(sectionTitle);
+    sectionTitle.classList.add('section-title');
+
+    const playlistsContainer = document.createElement('div');
+    playlistsContainer.classList.add('playlists-container');
+
+    playlists.forEach(function(playlist) {
+        const playlistItem = document.createElement('div');
+        playlistItem.classList.add('playlist');
+
+        const coverImg = document.createElement('img');
+        coverImg.src = playlist.cover;
+        coverImg.alt = playlist.title;
+        playlistItem.appendChild(coverImg);
+
+        const title = document.createElement('p');
+        title.textContent = playlist.title;
+        playlistItem.appendChild(title);
+        title.classList.add('playlist-title')
+
+        const author = document.createElement('p');
+        author.textContent = playlist.author;
+        playlistItem.appendChild(author);
+        author.classList.add('playlist-author')
+
+        playlistsContainer.appendChild(playlistItem);
+    });
+
+    freshHitsSection.appendChild(playlistsContainer);
+
+    const mainContent = document.querySelector('.content');
+    mainContent.appendChild(freshHitsSection);
+}
+
+// Вызываем функцию для добавления раздела "Свежие хиты" при загрузке страницы
+document.addEventListener('DOMContentLoaded', function() {
+    showMainPage();
+});
+

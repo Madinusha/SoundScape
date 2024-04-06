@@ -9,28 +9,72 @@
 <body>
 <header class="header">
     <a href="/" class="logo">
-        <img src="images/logo.png" style="width: 2em; height: 2em;" alt="Логотип SoundScape">
-        SoundScape
+        <img src="images/logo.png" style="width: 2em; height: 2em;" alt="Логотип SoundScape">SoundScape
     </a>
-    <input type="text" placeholder="Поиск...">
-    <button id="SignIn" onclick="showRegisterPage()" class="login-btn">Войти</button>
-    <button id="avatarButton" class="avatar-button" onclick="goToProfile()">М</button>
+    <div class="search-container">
+        <button id="search-button" class="search-button"></button>
+        <input type="text" placeholder="Поиск треков, исполнителей, альбомов...">
+    </div>
+    <div class="SignIn-container">
+        <button id="SignIn" onclick="showRegisterPage()" class="login-btn">Войти</button>
+        <button id="avatarButton" class="avatar-button" onclick="goToProfile()">М</button>
+    </div>
 </header>
 <div class="content-container">
     <nav class="sidebar" id="sidebar">
-        <button id="collapseBtn" onclick="toggleSidebar()" > </button>
-<!--            <img src="images/hamburger_button.png" alt="Свернуть" style="width: 1.5em; height: 1.5em; filter: invert(100%);">-->
         <ul>
-            <li><img src="images/logo.png" style= "filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg);" alt="Иконка Главная"><a href="#" onclick="">Главная</a></li>
-            <li><img src="images/my_tracks.png" alt="Иконка Топ"><a href="#" onclick="">Топ</a></li>
-            <li><img src="images/news.png" alt="Иконка Новинки"><a href="#" onclick="showNewReleases()">Новинки</a></li>
-            <li><img src="images/подборки.png" alt="Иконка Подборки"><a href="#" onclick="showCollections()">Подборки</a></li>
-            <li><img src="images/artist.png" alt="Иконка Исполнители"><a href="#" onclick="">Исполнители</a></li>
-
+            <li>
+                <button id="collapseBtn" onclick="toggleSidebar()"> </button>
+            </li>
+            <li>
+                <div class="menu-item" onclick="handleMenuItemClick(event)">
+                    <img src="images/logo.png" style="filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg);" alt="Иконка Главная">
+                    <a href="#" onclick="showMainPage()">Главная</a>
+                </div>
+            </li>
+            <li>
+                <div class="menu-item" onclick="handleMenuItemClick(event)">
+                    <img src="images/my_tracks.png" alt="Иконка Топ">
+                    <a href="#" onclick="">Топ</a>
+                </div>
+            </li>
+            <li>
+                <div class="menu-item" onclick="handleMenuItemClick(event)">
+                    <img src="images/news.png" alt="Иконка Новинки">
+                    <a href="#" onclick="showNewReleases()">Новинки</a>
+                </div>
+            </li>
+            <li>
+                <div class="menu-item" onclick="handleMenuItemClick(event)">
+                    <img src="images/подборки.png" alt="Иконка Подборки">
+                    <a href="#" onclick="showCollections()">Подборки</a>
+                </div>
+            </li>
+            <li>
+                <div class="menu-item" onclick="handleMenuItemClick(event)">
+                    <img src="images/artist.png" alt="Иконка Исполнители">
+                    <a href="#" onclick="">Исполнители</a>
+                </div>
+            </li>
             <li class="divider"></li>
-            <li><img src="images/my_tracks.png" alt="Иконка Мои треки"><a href="#" onclick="showMyTracks()">Мои треки</a></li>
-            <li><img src="images/playlists.png" alt="Иконка Плейлисты"><a href="#" onclick="showPlaylists()">Плейлисты</a></li>
-            <li><img src="images/albums.png" alt="Иконка Альбомы"><a href="#" onclick="">Альбомы</a></li>
+            <li>
+                <div class="menu-item" onclick="handleMenuItemClick(event)">
+                    <img src="images/my_tracks.png" alt="Иконка Мои треки">
+                    <a href="#" onclick="showMyTracks()">Мои треки</a>
+                </div>
+            </li>
+            <li>
+                <div class="menu-item" onclick="handleMenuItemClick(event)">
+                    <img src="images/playlists.png" alt="Иконка Плейлисты">
+                    <a href="#" onclick="showPlaylists()">Плейлисты</a>
+                </div>
+            </li>
+            <li>
+                <div class="menu-item" onclick="handleMenuItemClick(event)">
+                    <img src="images/albums.png" alt="Иконка Альбомы">
+                    <a href="#" onclick="">Альбомы</a>
+                </div>
+            </li>
 
         </ul>
     </nav>
