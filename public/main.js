@@ -132,7 +132,17 @@ function hideAllBlocks() {
 }
 
 function goToProfile() {
-  window.location.href = '/registration';
+  window.location.href = '/profile';
+  $.ajax({
+    type: 'GET',
+    url: '/profile',
+    success: function(response) {
+        alert(response.message);
+    },
+    error: function(error) {
+        alert(error.message);
+    }
+});
 }
 
 // Функция для выхода из аккаунта
@@ -149,7 +159,6 @@ function logout() {
         }
     });
 }
-
 
 const sidebar = document.getElementById('sidebar');
 const collapseBtn = document.getElementById('collapseBtn');
