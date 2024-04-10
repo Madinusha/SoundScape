@@ -34,13 +34,18 @@ function requireAuth(req, res, next) {
 
 // Маршрут для выхода из аккаунта
 app.post('/logout', (req, res) => {
-  req.session.destroy(err => {
-      if (err) {
-          return res.status(500).json({ error: 'Ошибка при завершении сессии.' });
-      }
-      res.clearCookie('sessionId'); // Очистить cookie с идентификатором сессии
-      res.status(200).json({ message: 'Выход из аккаунта прошел успешно.' });
-  });
+  if (req.session.userId) {
+    req.session.destroy(err => {
+        if (err) {
+            return res.status(500).json({ error: 'Ошибка при завершении сессии.' });
+        }
+        res.clearCookie('sessionId'); // Очистить cookie с идентификатором сессии
+        res.status(200).json({ message: 'Выход из аккаунта прошел успешно.' });
+    });
+  } 
+  else {
+      res.status(401).json({ error: 'Пользователь не авторизован.' });
+  }
 });
 
 // Маршрут для отображения основной страницы
