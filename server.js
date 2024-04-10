@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const session = require('express-session');
 const path = require('path');
 const sqlite3 = require('sqlite3').verbose();
 const bcrypt = require('bcrypt');
@@ -12,6 +13,36 @@ const db = new sqlite3.Database('./clients.db');
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 
+// Настройка сессий
+app.use(session({
+  secret: 'secret-key', // Замените на свой секретный ключ
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } // В реальном приложении установите secure: true для HTTPS
+}));
+
+// Middleware для проверки аутентификации пользователя
+function requireAuth(req, res, next) {
+  if (req.session.userId) {
+      // Пользователь аутентифицирован, продолжаем выполнение запроса
+      next();
+  } else {
+      // Пользователь не аутентифицирован, перенаправляем на страницу входа или возвращаем ошибку
+      res.status(401).send('Требуется аутентификация.');
+  }
+}
+
+// Маршрут для выхода из аккаунта
+app.post('/logout', (req, res) => {
+  req.session.destroy(err => {
+      if (err) {
+          return res.status(500).json({ error: 'Ошибка при завершении сессии.' });
+      }
+      res.clearCookie('sessionId'); // Очистить cookie с идентификатором сессии
+      res.status(200).json({ message: 'Выход из аккаунта прошел успешно.' });
+  });
+});
+
 // Маршрут для отображения основной страницы
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
@@ -22,10 +53,45 @@ app.get('/registration', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'registration.html'));
 });
 
-app.post('/registration', (req, res) => {
-  console.log("HERE");
+// Обработка POST-запроса на авторизацию
+app.post('/authorization', (req, res) => {
   const { email, password } = req.body;
-  console.log("Содержимое объекта req:", req.body);
+
+  // Проверка наличия обязательных полей
+  if (!email || !password) {
+    return res.status(400).json({ error: 'Необходимо заполнить все поля' });
+  }
+
+  // Проверка наличия пользователя с таким email и password в базе данных
+  db.get('SELECT * FROM users WHERE email = ?', [email], (err, row) => {
+      if (err) {
+        return res.status(500).json({ error: 'Ошибка при выполнении запроса к базе данных.' });
+      }
+
+      if (!row) {
+          return res.status(400).json({ error: 'Неверный email или пароль.' });
+      }
+
+      // Сравнение хэша пароля из базы данных с предоставленным паролем
+      bcrypt.compare(password, row.password, (compareErr, isMatch) => {
+        if (compareErr) {
+            return res.status(500).json({ error: 'Ошибка при сравнении паролей.' });
+        }
+
+        if (!isMatch) {
+            return res.status(400).json({ error: 'Неверный email или пароль.' });
+        }
+
+        // Если пароли совпадают, сохраняем идентификатор пользователя в сессии
+        req.session.userId = row.id;
+        return res.status(200).json({ message: 'Аутентификация прошла успешно.' });
+    });
+  });
+});
+
+// Обработка POST-запроса на регистрацию
+app.post('/registration', (req, res) => {
+  const { email, password } = req.body;
 
   // Проверка наличия обязательных полей
   if (!email || !password) {
@@ -58,6 +124,15 @@ app.post('/registration', (req, res) => {
       return res.status(200).json({ message: 'Пользователь успешно зарегистрирован' });
     });
   });
+});
+
+// Защищенный маршрут, доступный только аутентифицированным пользователям
+app.get('/profile', requireAuth, (req, res) => {
+  // Используем req.session.userId для получения информации о текущем пользователе
+  const userId = req.session.userId;
+
+  // Здесь можно получить дополнительные данные пользователя из базы данных и отправить клиенту
+  res.send(`Профиль пользователя с ID ${userId}`);
 });
 
 // Слушаем порт 3000

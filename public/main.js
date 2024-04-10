@@ -135,6 +135,21 @@ function goToProfile() {
   window.location.href = '/registration';
 }
 
+// Функция для выхода из аккаунта
+function logout() {
+    $.ajax({
+        type: 'POST',
+        url: '/logout', // URL, на который отправляем запрос на выход из аккаунта
+        success: function(response) {
+            alert(response.message); // Выводим сообщение об успешном выходе из аккаунта
+        },
+        error: function(xhr, status, error) {
+            const errorMessage = xhr.responseJSON ? xhr.responseJSON.error : 'Ошибка сервера';
+            alert(errorMessage); // Выводим сообщение об ошибке
+        }
+    });
+}
+
 
 const sidebar = document.getElementById('sidebar');
 const collapseBtn = document.getElementById('collapseBtn');
