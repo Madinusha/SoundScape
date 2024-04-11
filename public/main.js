@@ -173,8 +173,8 @@ async function search() {
 
         if (data.length > 0) {
             data.forEach(song => {
-                const songElement = document.createElement('div');
-                songElement.textContent = `${song.name} - ${song.artist}`;
+                const songElement = createTrackElement(song);
+
                 songElement.style.marginTop = '10px';
                 resultsDiv.appendChild(songElement);
                 // Добавляем аудиофайл к найденной песне
@@ -187,6 +187,26 @@ async function search() {
     } catch (error) {
         console.error('Ошибка поиска:', error);
     }
+}
+
+function createTrackElement(track) {
+    const trackElement = document.createElement('div');
+    trackElement.classList.add('track');
+    trackElement.innerHTML = `
+        <div class="track-info">
+            <img src="../music/Jongkook/GOLDEN/cover.jpg" alt="Обложка трека" class="cover-image">
+            <div class="info">
+                <div class="title">${track.name}</div>
+                <div class="artist">${track.artist}</div>
+            </div>
+        </div>
+        <div class="actions">
+            <button class="add-to-queue">+</button>
+            <button class="add-to-playlist">Добавить в плейлист</button>
+            <button class="settings">...</button>
+        </div>
+    `;
+    return trackElement;
 }
 
 // Функция для добавления аудиофайла на страницу
