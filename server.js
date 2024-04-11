@@ -8,6 +8,7 @@ const bcrypt = require('bcrypt');
 const port = 3002; // Порт, на котором хотиv запустить сервер
 
 const db = new sqlite3.Database('./clients.db');
+const db1 = new sqlite3.Database('./music.db');
 
 // Установка пути к статическим файлам (html, css, js)
 app.use(express.static(path.join(__dirname, 'public')));
@@ -138,6 +139,34 @@ app.get('/profile', requireAuth, (req, res) => {
 
   // Здесь можно получить дополнительные данные пользователя из базы данных и отправить клиенту
   res.send(`Профиль пользователя с ID ${userId}`);
+});
+
+// Маршрут для обработки запросов на поиск песен
+app.get('/search', (req, res) => {
+  const searchTerm = req.query.term; // Получаем текст поискового запроса из параметра запроса
+  console.log(searchTerm)
+
+  if (!searchTerm) {
+      return res.status(400).json({ error: 'Ошибка поиска' });
+  }
+
+  // Используем параметризированный SQL-запрос для поиска песен
+  const sql = `SELECT * FROM tracks WHERE name LIKE ?`;
+  const query = `%${searchTerm}%`; // Поиск частичного совпадения
+
+  db1.all(sql, [query], (err, rows) => {
+      if (err) {
+          return res.status(500).json({ error: 'Ошибка запроса' });
+      } else {
+          if (rows.length > 0) {
+              // Если найдены песни, отправляем их клиенту
+              return res.status(400).json(rows);
+          } else {
+              // Если ничего не найдено, отправляем сообщение
+              return res.status(400).json({ error: 'Ничего не найдено.' });
+          }
+      }
+  });
 });
 
 // Слушаем порт 3000

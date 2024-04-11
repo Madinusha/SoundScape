@@ -160,6 +160,37 @@ function logout() {
     });
 }
 
+async function search() {
+    const searchTerm = document.getElementById('searchInput').value.trim();
+    if (!searchTerm) return;
+
+    try {
+        const response = await fetch(`/search?term=${encodeURIComponent(searchTerm)}`);
+        const data = await response.json();
+
+        const resultsDiv = document.getElementById('searchResults');
+        resultsDiv.innerHTML = '';
+
+        if (data.length > 0) {
+            data.forEach(song => {
+                const songElement = document.createElement('div');
+                songElement.textContent = `${song.name} - ${song.artist}`;
+                resultsDiv.appendChild(songElement);
+            });
+        } else {
+            resultsDiv.textContent = 'Ничего не найдено.';
+        }
+    } catch (error) {
+        console.error('Ошибка поиска:', error);
+    }
+}
+
+document.getElementById('searchInput').addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+        search();
+    }
+});
+
 const sidebar = document.getElementById('sidebar');
 const collapseBtn = document.getElementById('collapseBtn');
 let isCollapsed = false; // Переменная для отслеживания состояния ширины навбара

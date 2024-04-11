@@ -13,7 +13,7 @@
     </a>
     <div class="search-container">
         <button id="search-button" class="search-button"></button>
-        <input type="text" placeholder="Поиск треков, исполнителей, альбомов...">
+        <input type="text" id="searchInput" placeholder="Поиск треков, исполнителей, альбомов...">
     </div>
     <div class="SignIn-container">
         <button id="SignIn" onclick="showRegisterPage()" class="login-btn">Войти</button>
@@ -79,7 +79,7 @@
 
         </ul>
     </nav>
-    <section class="content">
+    <section class="content" id="searchResults">
         <div id="my-tracks" class="block">
             <!-- Динамический контент будет загружен здесь -->
         </div>
