@@ -175,7 +175,11 @@ async function search() {
             data.forEach(song => {
                 const songElement = document.createElement('div');
                 songElement.textContent = `${song.name} - ${song.artist}`;
+                songElement.style.marginTop = '10px';
                 resultsDiv.appendChild(songElement);
+                // Добавляем аудиофайл к найденной песне
+                // path = song.path.replace(/\\/g, '/');
+                addAudioToPage(song.path); // Путь к аудиофайлу из данных (поле song.path)
             });
         } else {
             resultsDiv.textContent = 'Ничего не найдено.';
@@ -183,6 +187,17 @@ async function search() {
     } catch (error) {
         console.error('Ошибка поиска:', error);
     }
+}
+
+// Функция для добавления аудиофайла на страницу
+function addAudioToPage(songPath) {
+    const audioPlayer = document.createElement('audio');
+    audioPlayer.controls = true; // Показываем элементы управления
+    audioPlayer.src = songPath; // Устанавливаем путь к аудиофайлу
+    audioPlayer.style.marginTop = '10px'; // Добавляем немного отступа сверху
+
+    const resultsDiv = document.getElementById('searchResults');
+    resultsDiv.appendChild(audioPlayer); // Добавляем аудиофайл на страницу в блок с результатами
 }
 
 document.getElementById('searchInput').addEventListener('keypress', function (e) {
