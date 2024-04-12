@@ -1,6 +1,9 @@
 # Database
 clients.db
 
+# IntelliJ Idea
+.idea
+
 # Logs
 logs
 *.log
