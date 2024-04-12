@@ -178,7 +178,6 @@ async function search() {
                 songElement.style.marginTop = '10px';
                 resultsDiv.appendChild(songElement);
                 // Добавляем аудиофайл к найденной песне
-                // path = song.path.replace(/\\/g, '/');
                 addAudioToPage(song.path); // Путь к аудиофайлу из данных (поле song.path)
             });
         } else {

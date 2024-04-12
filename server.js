@@ -146,7 +146,7 @@ app.get('/profile', requireAuth, (req, res) => {
 });
 
 // Маршрут для обработки запросов на поиск песен
-app.get('/search', (req, res) => {
+app.post('/search', (req, res) => {
   const searchTerm = req.query.term; // Получаем текст поискового запроса из параметра запроса
 
   if (!searchTerm) {
