@@ -84,10 +84,15 @@ def add_track_to_db(mp3):
                       VALUES (?, ?, ?, ?, ?, ?, ?, ?)''', (mp3, album_img_path, name, artist, genre, album, duration, year))
     connection.commit()
 
+def add_tracks_to_db(dir):
+    '''Добавляет mp3-треки в базу данных из выбранной дериктории'''
+    mp3_list = find_mp3_files(dir)
+    for track in mp3_list:
+        add_track_to_db(track)
+
+
 
 if __name__ == '__main__':
     create_mp3_table()
     album_path1 = 'music\\Jongkook\\GOLDEN'
-    mp3_list = find_mp3_files(album_path1)
-    for track in mp3_list:
-        add_track_to_db(track)
+    add_tracks_to_db(album_path1)
