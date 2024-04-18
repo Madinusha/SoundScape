@@ -61,8 +61,7 @@ def get_mp3_tags(mp3):
         tags['genre'] = audio['TCON'].text[0] # Жанр
     if 'TDRC' in audio:
         tags['year'] = int(str(audio['TDRC'].text[0])[0:4]) # Год выпуска
-    if 'TLEN' in audio:
-        tags['duration'] = int(audio.info.length) # Продолжительность трека
+    tags['duration'] = int(audio.info.length) # Продолжительность трека
 
     return tags
 
@@ -94,5 +93,6 @@ def add_tracks_to_db(dir):
 
 if __name__ == '__main__':
     create_mp3_table()
-    album_path1 = 'music\\Jongkook\\GOLDEN'
-    add_tracks_to_db(album_path1)
+    album_path = 'music'
+    # m_album_path = 'music//Монеточка'
+    add_tracks_to_db(album_path)
