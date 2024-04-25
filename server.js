@@ -126,7 +126,7 @@ app.post('/registration', (req, res) => {
     }
 
     // Добавление нового пользователя в базу данных
-    db.run('INSERT INTO users (nickname, email, password) VALUES (?, ?, ?)', [nickname, email, hashedPassword], (err) => {
+    db.run('INSERT INTO users (nickname, email, password, type, isBlocked) VALUES (?, ?, ?, ?, ?)', [nickname, email, hashedPassword, 'user', 0], (err) => {
       if (err) {
         console.error(err.message);
         return res.status(500).json({ error: 'Ошибка сервера' });
