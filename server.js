@@ -92,6 +92,10 @@ app.post('/authorization', (req, res) => {
             return res.status(400).json({ error: 'Неверный email или пароль.' });
         }
 
+        if (row.isBlocked === 1) {
+            return res.status(400).json({ error: 'Ваш аккаунт заблокирован.' });
+        }
+
         // Если пароли совпадают, сохраняем идентификатор пользователя в сессии
         req.session.userId = row.id;
         return res.status(200).json({ message: 'Аутентификация прошла успешно.' });
