@@ -92,6 +92,10 @@ app.post('/authorization', (req, res) => {
             return res.status(400).json({ error: 'Неверный email или пароль.' });
         }
 
+        if (row.isBlocked === 1) {
+            return res.status(400).json({ error: 'Ваш аккаунт заблокирован.' });
+        }
+
         // Если пароли совпадают, сохраняем идентификатор пользователя в сессии
         req.session.userId = row.id;
         return res.status(200).json({ message: 'Аутентификация прошла успешно.' });
@@ -101,10 +105,11 @@ app.post('/authorization', (req, res) => {
 
 // Обработка POST-запроса на регистрацию
 app.post('/registration', (req, res) => {
-  const { email, password } = req.body;
+  console.log(req.body)
+  const { nickname, email, password } = req.body;
 
   // Проверка наличия обязательных полей
-  if (!email || !password) {
+  if (!nickname || !email || !password) {
     return res.status(400).json({ error: 'Необходимо заполнить все поля' });
   }
 
@@ -125,7 +130,8 @@ app.post('/registration', (req, res) => {
     }
 
     // Добавление нового пользователя в базу данных
-    dbClients.run('INSERT INTO users (email, password) VALUES (?, ?)', [email, hashedPassword], (err) => {
+    // dbClients.run('INSERT INTO users (email, password) VALUES (?, ?)', [email, hashedPassword], (err) => {
+    dbСlients.run('INSERT INTO users (nickname, email, password, type, isBlocked) VALUES (?, ?, ?, ?, ?)', [nickname, email, hashedPassword, 'user', 0], (err) => {
       if (err) {
         console.error(err.message);
         return res.status(500).json({ error: 'Ошибка сервера' });
@@ -142,7 +148,7 @@ app.get('/profile', requireAuth, (req, res) => {
   const userId = req.session.userId;
 
   // Здесь можно получить дополнительные данные пользователя из базы данных и отправить клиенту
-  res.send(`Профиль пользователя с ID ${userId}`);
+  res.sendFile(path.join(__dirname, 'public', 'profileInfo.html'));
 });
 
 // Маршрут для обработки запросов на поиск песен
