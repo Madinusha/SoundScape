@@ -101,10 +101,11 @@ app.post('/authorization', (req, res) => {
 
 // Обработка POST-запроса на регистрацию
 app.post('/registration', (req, res) => {
-  const { email, password } = req.body;
+  console.log(req.body)
+  const { nickname, email, password } = req.body;
 
   // Проверка наличия обязательных полей
-  if (!email || !password) {
+  if (!nickname || !email || !password) {
     return res.status(400).json({ error: 'Необходимо заполнить все поля' });
   }
 
@@ -125,7 +126,7 @@ app.post('/registration', (req, res) => {
     }
 
     // Добавление нового пользователя в базу данных
-    db.run('INSERT INTO users (email, password) VALUES (?, ?)', [email, hashedPassword], (err) => {
+    db.run('INSERT INTO users (nickname, email, password) VALUES (?, ?, ?)', [nickname, email, hashedPassword], (err) => {
       if (err) {
         console.error(err.message);
         return res.status(500).json({ error: 'Ошибка сервера' });
