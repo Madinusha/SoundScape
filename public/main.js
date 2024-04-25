@@ -193,7 +193,7 @@ function createTrackElement(track) {
     trackElement.classList.add('track');
     trackElement.innerHTML = `
         <div class="track-info">
-            <img src="../music/Jongkook/GOLDEN/cover.jpg" alt="Обложка трека" class="cover-image">
+            <img src="${track.album_img_path}" alt="Обложка трека" class="cover-image">
             <div class="info">
                 <div class="title">${track.name}</div>
                 <div class="artist">${track.artist}</div>
