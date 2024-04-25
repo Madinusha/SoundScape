@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Личный кабинет</title>
+  <link rel="stylesheet" href="profileInfo.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Профиль пользователя</h1>
+    <div class="user-info">
+      <div class="info-item">
+        <span class="label">Никнейм:</span>
+        <span class="value" id="nickname"></span>
+      </div>
+      <div class="info-item">
+        <span class="label">Электронная почта:</span>
+        <span class="value" id="email"></span>
+      </div>
+      <div class="info-item">
+        <span class="label">Тип:</span>
+        <span class="value" id="type"></span>
+      </div>
+      <div class="info-item">
+        <span class="label">Порядковый номер пользователя:</span>
+        <span class="value" id="userNumber"></span>
+      </div>
+    </div>
+    <button class="return-button" onclick="goBack()">Вернуться к прослушиванию</button>
+  </div>
+  <script>
+    function goBack() {
+      window.history.back();
+    }
+  </script>
+</body>
+</html>
+
+

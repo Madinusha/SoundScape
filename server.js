@@ -147,7 +147,7 @@ app.get('/profile', requireAuth, (req, res) => {
   const userId = req.session.userId;
 
   // Здесь можно получить дополнительные данные пользователя из базы данных и отправить клиенту
-  res.send(`Профиль пользователя с ID ${userId}`);
+  res.sendFile(path.join(__dirname, 'public', 'profileInfo.html'));
 });
 
 // Маршрут для обработки запросов на поиск песен

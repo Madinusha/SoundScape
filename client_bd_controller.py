@@ -165,7 +165,7 @@ def set_musician(email):
 
 if __name__ == '__main__':
     # create_clients_db()
-    block_user('new@new')
-    # unblock_user('3@3')
+    # block_user('new@new')
+    unblock_user('new@new')
     # set_admin('3@3')
     # set_musician('3@3')
