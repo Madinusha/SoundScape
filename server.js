@@ -7,7 +7,7 @@ const bcrypt = require('bcrypt');
 
 const port = 3002; // Порт, на котором хотиv запустить сервер
 
-const dbClients = new sqlite3.Database('./clients.db');
+const dbСlients = new sqlite3.Database('./clients.db');
 const dbMusic = new sqlite3.Database('./music.db');
 
 // Установка пути к статическим файлам (html, css, js)
@@ -73,7 +73,7 @@ app.post('/authorization', (req, res) => {
   }
 
   // Проверка наличия пользователя с таким email и password в базе данных
-  dbClients.get('SELECT * FROM users WHERE email = ?', [email], (err, row) => {
+  dbСlients.get('SELECT * FROM users WHERE email = ?', [email], (err, row) => {
       if (err) {
         return res.status(500).json({ error: 'Ошибка при выполнении запроса к базе данных.' });
       }
@@ -117,7 +117,7 @@ app.post('/registration', (req, res) => {
   const hashedPassword = bcrypt.hashSync(password, 10);
 
   // Проверка наличия пользователя с таким email в базе данных
-  dbClients.get('SELECT * FROM users WHERE email = ?', [email], (err, row) => {
+  dbСlients.get('SELECT * FROM users WHERE email = ?', [email], (err, row) => {
     if (err) {
       console.error(err.message);
       return res.status(500).json({ error: 'Ошибка сервера' });
