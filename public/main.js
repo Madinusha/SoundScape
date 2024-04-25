@@ -200,7 +200,7 @@ function createTrackElement(track) {
             </div>
         </div>
         <div class="actions">
-            <button class="add-to-queue">+</button>
+            <button class="add-to-queue" data-track-id="${track.id}" onclick="addTrackToUser(this)">+</button>
             <button class="add-to-playlist">Добавить в плейлист</button>
             <button class="settings">...</button>
         </div>
@@ -217,6 +217,28 @@ function addAudioToPage(songPath) {
 
     const resultsDiv = document.getElementById('searchResults');
     resultsDiv.appendChild(audioPlayer); // Добавляем аудиофайл на страницу в блок с результатами
+}
+
+// Функция для добавления трека в "Мои треки"
+function addTrackToUser(button) {
+     // Получаем значение атрибута "data-track-id" кнопки, на которую был клик
+     const trackId = button.dataset.trackId;
+
+     // Выводим значение trackId в консоль
+     console.log(`Вы кликнули на кнопку с data-track-id: ${trackId}`);
+
+     $.ajax({
+        url: '/add', // URL для отправки запроса
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ trackId: trackId }), // Отправляем данные в формате JSON
+        success: function(response) {
+            console.log('Трек успешно добавлен к пользователю!');
+        },
+        error: function(xhr, status, error) {
+            console.log('Ошибка при добавлении трека к пользователю:', xhr.responseJSON.error);
+        }
+    });
 }
 
 document.getElementById('searchInput').addEventListener('keypress', function (e) {
@@ -258,6 +280,54 @@ function handleMenuItemClick(event) {
     var menuItem = event.currentTarget.parentNode;
     var link = menuItem.querySelector('a');
     link.onclick();
+}
+
+async function showUserTracks() {
+    const resultsDiv = document.getElementById('searchResults');
+    resultsDiv.innerHTML = '';
+
+    // $.ajax({
+    //     url: '/tracks', 
+    //     method: 'POST',
+    //     dataType: 'json', // Ожидаемый тип данных в ответе (JSON)
+    //     success: function(data) {
+    //         console.log('Треки пользователя', response);
+    //         if (data.length > 0) {
+    //             data.forEach(song => {
+    //                 const songElement = createTrackElement(song);
+    //                 songElement.style.marginTop = '10px';
+    //                 resultsDiv.appendChild(songElement);
+    //                 // Добавляем аудиофайл к найденной песне
+    //                 addAudioToPage(song.path); // Путь к аудиофайлу из данных (поле song.path)
+    //             });
+    //         } else {
+    //             resultsDiv.textContent = 'Ничего не найдено.';
+    //         }
+    //     },
+    //     error: function(xhr, status, error) {
+    //         console.error('Произошла ошибка при выполнении запроса:', error);
+    //         resultsDiv.textContent = error;
+    //     }
+    // });
+
+    try {
+        const response = await fetch(`/tracks`);
+        const data = await response.json();
+
+        if (data.length > 0) {
+            data.forEach(song => {
+                const songElement = createTrackElement(song);
+                songElement.style.marginTop = '10px';
+                resultsDiv.appendChild(songElement);
+                // Добавляем аудиофайл к найденной песне
+                addAudioToPage(song.path); // Путь к аудиофайлу из данных (поле song.path)
+            });
+        } else {
+            resultsDiv.textContent = 'Нет добавленных треков.';
+        }
+    } catch (error) {
+        console.error('Ошибка поиска:', error);
+    }
 }
 
 function addPlaylistsSection(Title) {
