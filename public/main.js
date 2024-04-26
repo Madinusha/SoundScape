@@ -132,17 +132,17 @@ function hideAllBlocks() {
 }
 
 function goToProfile() {
-  window.location.href = '/profile';
   $.ajax({
     type: 'GET',
     url: '/profile',
     success: function(response) {
-        alert(response.message);
+        window.location.href = '/profile';
     },
-    error: function(error) {
-        alert(error.message);
+    error: function(xhr, status, error) {
+        const errorMessage = xhr.responseJSON ? xhr.responseJSON.error : 'Ошибка сервера';
+        alert(errorMessage); // Выводим сообщение об ошибке
     }
-});
+    });
 }
 
 // Функция для выхода из аккаунта

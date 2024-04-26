@@ -63,6 +63,33 @@ app.get('/registration', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'registration.html'));
 });
 
+// Защищенный маршрут, доступный только аутентифицированным пользователям
+app.get('/profile', requireAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'profileInfo.html'));
+});
+
+app.get('/profileInfo', requireAuth, (req, res) => {
+  const userId = req.session.userId;
+
+  dbСlients.get('SELECT * FROM users WHERE id = ?', [userId], (err, row) => {
+    if (err) {
+      return res.status(500).json({ error: 'Ошибка при выполнении запроса к базе данных.' });
+    }
+
+    if (!row) {
+        return res.status(400).json({ error: 'Неверный id.' });
+    }
+
+    // res.sendFile(path.join(__dirname, 'public', 'profileInfo.html'), {
+    //   id: row.id,
+    //   nickname: row.name,
+    //   email: row.email,
+    //   type: row.type
+    // });
+    res.status(200).json(row);
+  });
+});
+
 // Обработка POST-запроса на авторизацию
 app.post('/authorization', (req, res) => {
   const { email, password } = req.body;
@@ -140,15 +167,6 @@ app.post('/registration', (req, res) => {
       return res.status(200).json({ message: 'Пользователь успешно зарегистрирован' });
     });
   });
-});
-
-// Защищенный маршрут, доступный только аутентифицированным пользователям
-app.get('/profile', requireAuth, (req, res) => {
-  // Используем req.session.userId для получения информации о текущем пользователе
-  const userId = req.session.userId;
-
-  // Здесь можно получить дополнительные данные пользователя из базы данных и отправить клиенту
-  res.sendFile(path.join(__dirname, 'public', 'profileInfo.html'));
 });
 
 // Маршрут для обработки запросов на поиск песен
