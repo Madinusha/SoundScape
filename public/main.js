@@ -1,24 +1,28 @@
 // Sample data
 const myTracks = [
-    { title: "Permission to dance", artist: "BTS", duration: "3:30", cover: "images/cover1.jpg"},
-    { title: "DNA", artist: "BTS", duration: "4:15", cover: "images/cover2.jpg"},
-    { title: "Лимонад", artist: "ЛСП", duration: "2:50", cover: "images/cover3.jpg"}
+    { name: "Permission to dance", artist: "BTS", duration: "3:30", album_img_path: "images/cover1.jpg", path: "music/Jongkook/GOLDEN/10 - Shot Glass of Tears.mp3"},
+    { name: "DNA", artist: "BTS", duration: "4:15", album_img_path: "images/cover2.jpg", path: "music/Jongkook/GOLDEN/01 - 3D (feat. Jack Harlow).mp3"},
+    { name: "Лимонад", artist: "ЛСП", duration: "2:50", album_img_path: "images/cover3.jpg", path: "music/Jongkook/GOLDEN/01 - 3D (feat. Jack Harlow).mp3"},
+    { name: "Permission to dance", artist: "BTS", duration: "3:30", album_img_path: "images/cover1.jpg", path: "music/Jongkook/GOLDEN/01 - 3D (feat. Jack Harlow).mp3"},
+    { name: "DNA", artist: "BTS", duration: "4:15", album_img_path: "images/cover2.jpg", path: "music/Jongkook/GOLDEN/01 - 3D (feat. Jack Harlow).mp3"},
+    { name: "Лимонад", artist: "ЛСП", duration: "2:50", album_img_path: "images/cover3.jpg", path: "music/Jongkook/GOLDEN/01 - 3D (feat. Jack Harlow).mp3"}
 ];
 
+
 const playlists = [
-    { title: "Permission to dance", author: "BTS", cover: "images/cover1.jpg"},
-    { title: "DNA", author: "BTS", cover: "images/cover2.jpg"},
-    { title: "Лимонад", author: "ЛСП", cover: "images/cover3.jpg"},
-    { title: "Permission to dance", author: "BTS", cover: "images/cover1.jpg"},
-    { title: "DNA", author: "BTS", cover: "images/cover2.jpg"},
-    { title: "DNA", author: "BTS", cover: "images/cover2.jpg"},
-    { title: "Лимонад", author: "ЛСП", cover: "images/cover3.jpg"}
+    { name: "Permission to dance", author: "BTS", cover: "images/cover1.jpg"},
+    { name: "DNA", author: "BTS", cover: "images/cover2.jpg"},
+    { name: "Лимонад", author: "ЛСП", cover: "images/cover3.jpg"},
+    { name: "Permission to dance", author: "BTS", cover: "images/cover1.jpg"},
+    { name: "DNA", author: "BTS", cover: "images/cover2.jpg"},
+    { name: "DNA", author: "BTS", cover: "images/cover2.jpg"},
+    { name: "Лимонад", author: "ЛСП", cover: "images/cover3.jpg"}
 ];
 
 const collections = [
-    { title: "Плейлист дня 1", author: "BTS", cover: "images/cover1.jpg"},
-    { title: "Плейлист дня 2", author: "Барбарики", cover: "images/cover2.jpg"},
-    { title: "Для вас", author: "Инстасамка", cover: "images/cover3.jpg"}
+    { name: "Плейлист дня 1", author: "BTS", cover: "images/cover1.jpg"},
+    { name: "Плейлист дня 2", author: "Барбарики", cover: "images/cover2.jpg"},
+    { name: "Для вас", author: "Инстасамка", cover: "images/cover3.jpg"}
 ];
 
 // Функция отображения Моих треков
@@ -26,26 +30,10 @@ function displayMyTracks() {
     const myTracksBlock = document.getElementById('my-tracks');
     myTracksBlock.innerHTML = '';
     myTracks.forEach(track => {
-        const trackElement = document.createElement('div');
-        trackElement.classList.add('track');
-        trackElement.innerHTML = `
-            <div class="track-info">
-                <img src="${track.cover}" alt="Обложка трека" class="cover-image">
-                <div class="info">
-                    <div class="title">${track.title}</div>
-                    <div class="artist">${track.artist}</div>
-                </div>
-            </div>
-            <div class="actions">
-                <button class="add-to-queue">+</button>
-                <button class="add-to-playlist">Добавить в плейлист</button>
-                <button class="settings">...</button>
-            </div>
-        `;
-        myTracksBlock.appendChild(trackElement);
+
+        myTracksBlock.appendChild(createTrackElement(track));
     });
 }
-
 
 // Функция отображения плейлистов
 function displayPlaylists() {
@@ -90,9 +78,10 @@ function showRegisterPage() {
 
 function showMyTracks() {
     hideAllBlocks();
-    displayMyTracks();
+    addTracksSection("Мои треки")
     document.getElementById('my-tracks').style.display = 'block';
 }
+
 
 function showPlaylists() {
     hideAllBlocks();
@@ -115,6 +104,7 @@ function showNewReleases() {
 
 function showMainPage() {
     hideAllBlocks();
+    addTracksSection("Мои треки");
     addPlaylistsSection("Свежие хиты");
     addPlaylistsSection("Рекомендации для вас");
     addPlaylistsSection("Сегодня в тренде");
@@ -177,8 +167,6 @@ async function search() {
 
                 songElement.style.marginTop = '10px';
                 resultsDiv.appendChild(songElement);
-                // Добавляем аудиофайл к найденной песне
-                addAudioToPage(song.path); // Путь к аудиофайлу из данных (поле song.path)
             });
         } else {
             resultsDiv.textContent = 'Ничего не найдено.';
@@ -193,6 +181,9 @@ function createTrackElement(track) {
     trackElement.classList.add('track');
     trackElement.innerHTML = `
         <div class="track-info">
+            <div class="play-button">
+                <button class="play-pause-button"></button>
+            </div>
             <img src="${track.album_img_path}" alt="Обложка трека" class="cover-image">
             <div class="info">
                 <div class="title">${track.name}</div>
@@ -205,8 +196,140 @@ function createTrackElement(track) {
             <button class="settings">...</button>
         </div>
     `;
+
+    // Добавляем обработчик события к кнопке внутри элемента трека
+    const playButton = trackElement.querySelector(".play-pause-button");
+    if (playButton) {
+        playButton.addEventListener('click', function() {
+
+            // Удаление предыдущего плеера из хедера, если он есть
+            const headerAudioPlayer = document.getElementById('headerAudioPlayer');
+            const audio = headerAudioPlayer.querySelector("audio");
+            if ((audio !== null && track.path !== audio.src) || (audio === null)){
+                headerAudioPlayer.innerHTML = ''; // Очищаем содержимое
+                // Создание нового плеера для текущего трека
+                const audioPlayer = document.createElement('audio');
+                audioPlayer.controls = true;
+                audioPlayer.controlsList = "nodownload";
+                audioPlayer.src = track.path;
+                audioPlayer.style.display = 'none';
+
+
+                createHeaderPlayer(audioPlayer, headerAudioPlayer);
+
+
+                // Добавление плеера в хедер
+                headerAudioPlayer.appendChild(audioPlayer);
+                playOrPause(headerAudioPlayer, trackElement); // Передаем элемент трека в функцию playOrPause
+            } else {
+                console.log("трек тот же!!")
+                playOrPause(headerAudioPlayer, trackElement); // Передаем элемент трека в функцию playOrPause
+            }
+
+        });
+    } else {
+        console.error('Кнопка воспроизведения не найдена в элементе трека');
+    }
     return trackElement;
 }
+
+
+let currentAudio = null; // Глобальная переменная для отслеживания текущего проигрывателя
+let currentAudioSrc = null;
+function playOrPause(headerAudioElement, trackElement) {
+    const audio = headerAudioElement.querySelector("audio");
+    if (!audio) {
+        console.error('Аудиофайл не найден в элементе трека');
+        return;
+    }
+
+    if (currentAudioSrc === audio.src) {
+        // Текущий трек нажат еще раз, переключаем проигрывание / паузу
+        if (audio.paused) {
+            audio.play();
+            trackElement.classList.add('playing'); // Добавляем класс при воспроизведении
+        } else {
+            const currentTime = audio.currentTime; // Сохраняем текущее время воспроизведения
+            audio.pause();
+            audio.currentTime = currentTime; // Устанавливаем время воспроизведения обратно
+            trackElement.classList.remove('playing'); // Удаляем класс при паузе
+        }
+    } else {
+        // Новый трек
+        if (currentAudio) {
+            // Если есть текущий трек, останавливаем его воспроизведение
+            currentAudio.pause();
+            // Удаляем класс "playing" у предыдущего трека
+            const firstPlayingElement = document.querySelector('.playing');
+            firstPlayingElement.classList.remove('playing');
+        }
+        // Обновляем текущий трек и начинаем воспроизведение нового трека
+        currentAudio = audio;
+        currentAudioSrc = audio.src;
+        audio.play();
+        trackElement.classList.add('playing'); // Добавляем класс при воспроизведении
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const playButtons = document.querySelectorAll(".play-pause-button");
+    playButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const trackElement = button.closest('.track');
+            playOrPause(trackElement);
+        });
+    });
+});
+
+
+function createHeaderPlayer(audioPlayer, headerAudioPlayer){
+    createProgressBar(audioPlayer, headerAudioPlayer);
+}
+
+
+function createProgressBar(audioPlayer, headerAudioPlayer) {
+    const playPauseButton = document.createElement('button');
+    playPauseButton.classList.add('playPauseButton');
+    playPauseButton.style.backgroundImage = 'url("images/pause.png")';
+    playPauseButton.addEventListener('click', function() {
+        if (audioPlayer.paused) {
+            audioPlayer.play();
+            playPauseButton.style.backgroundImage = 'url("images/pause.png")';
+        } else {
+            audioPlayer.pause();
+            playPauseButton.style.backgroundImage = 'url("images/play.png")';
+        }
+    });
+//??????????????????????
+    const name = audioPlayer.name;
+    const author = audioPlayer.author;
+    const trackInfo = document.createElement('div');
+    trackInfo.classList.add('track-info');
+
+
+    const progressBar = document.createElement('input');
+    progressBar.classList.add('progress-bar');
+    progressBar.type = 'range';
+    progressBar.min = 0;
+    progressBar.value = 0;
+    progressBar.max = audioPlayer.duration;
+    progressBar.step = 1;
+
+    progressBar.addEventListener('input', function() {
+        audioPlayer.currentTime = progressBar.value;
+    });
+
+    audioPlayer.addEventListener('timeupdate', function() {
+        progressBar.value = audioPlayer.currentTime;
+    });
+
+    headerAudioPlayer.appendChild(trackInfo);
+    headerAudioPlayer.appendChild(playPauseButton);
+    headerAudioPlayer.appendChild(progressBar);
+}
+
+
+
 
 // Функция для добавления аудиофайла на страницу
 function addAudioToPage(songPath) {
@@ -281,6 +404,26 @@ function handleMenuItemClick(event) {
     var link = menuItem.querySelector('a');
     link.onclick();
 }
+
+function addTracksSection(Title) {
+    const tracksSection = document.createElement('div');
+    tracksSection.classList.add('section');
+
+    const sectionTitle = document.createElement('h2');
+    sectionTitle.textContent = Title;
+    tracksSection.appendChild(sectionTitle);
+    sectionTitle.classList.add('section-title');
+
+    const tracksContainer = document.createElement('div');
+    tracksContainer.classList.add('tracks-container');
+
+    myTracks.forEach(function(track) {
+        tracksContainer.appendChild(createTrackElement(track));
+    });
+
+    tracksSection.appendChild(tracksContainer);
+    const mainContent = document.querySelector('.content');
+    mainContent.appendChild(tracksSection);
 
 async function showUserTracks() {
     const resultsDiv = document.getElementById('searchResults');
@@ -370,8 +513,9 @@ function addPlaylistsSection(Title) {
     mainContent.appendChild(freshHitsSection);
 }
 
-// Вызываем функцию для добавления раздела "Свежие хиты" при загрузке страницы
 document.addEventListener('DOMContentLoaded', function() {
     showMainPage();
 });
+
+
 

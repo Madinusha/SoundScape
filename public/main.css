@@ -1,3 +1,4 @@
+@import url(https://fonts.googleapis.com/css?family=Poppins:200,400);
 body {
     margin: 0;
     font-family: Arial, sans-serif;
@@ -14,6 +15,46 @@ header {
     			0 5px 5px rgba(0,0,0,0.22);
 
 }
+
+.headerAudioPlayer {
+    display: flex;
+    align-items: center;
+    height: 1.5em;
+
+}
+.playPauseButton{
+     background-color: transparent;
+     background-image: center/cover no-repeat;
+     height: 2em;
+     width: 2em;
+     border: none;
+     font-size: 16px;
+     cursor: pointer;
+     margin-right: 10px; /* Расстояние между кнопкой и прогресс-баром */
+}
+
+.progress-bar {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    background: #ddd;
+    border-radius: 2px;
+}
+
+.progress-bar::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 5px;
+    height: 5px;
+    background-color: transparent;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.progress-bar::-webkit-progress-value {
+    background-color: linear-gradient(to right, #7366bd, #FF416C);
+}
+
 
 .logo {
     color: white;
@@ -35,7 +76,7 @@ header {
     color: white;
     border: none;
     cursor: pointer;
-    margin-right: 1em;
+    margin-right: 0.5em;
     box-shadow: 0 5px 28px rgba(0,0,0,0.10),
                     0 10px 10px rgba(0,0,0,0.10);
 }
@@ -123,15 +164,21 @@ header {
 
 /* Стили для каждого трека */
 .track {
-    box-shadow: 0 14px 28px rgba(0,0,0,0.25),
-			0 10px 10px rgba(0,0,0,0.22);
-    border: 1px solid #ccc;
+    box-shadow: 0 5px 7px rgba(0,0,0,0.25),
+			0 5px 7px rgba(0,0,0,0.22);
+    border: 1px solid rgba(255, 255, 255, 0.3);;
     border-radius: 5px;
     padding: 10px;
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 7px;
+    position: relative;
 }
+
+.track:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
 
 /* Стили для обложки трека */
 .cover-image {
@@ -147,6 +194,29 @@ header {
     align-items: center; /* Выравниваем элементы по вертикали */
     flex: 1; /* Растягиваем на всю доступную ширину */
     margin-right: 10px; /* Добавляем отступ справа для разделения между информацией и кнопками */
+}
+.play-button {
+    position: absolute;
+    width: 50px; /* Ширина контейнера равна ширине обложки */
+    height: 50px; /* Высота контейнера равна высоте обложки */
+}
+
+
+.play-pause-button {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: black;
+    border: none;
+    cursor: pointer;
+    opacity: 0;
+}
+
+.playing {
+    background-color: rgba(255, 255, 255, 0.3);
+
 }
 
 /* Стили для текста плейлиста */
@@ -334,11 +404,6 @@ input[type="text"]:focus  {
 ::-webkit-scrollbar-thumb:hover {
     background: #5c4db1; /* Цвет дорожки при наведении */
 }
-
-
-
-
-
 
 
 
