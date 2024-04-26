@@ -424,6 +424,7 @@ function addTracksSection(Title) {
     tracksSection.appendChild(tracksContainer);
     const mainContent = document.querySelector('.content');
     mainContent.appendChild(tracksSection);
+}
 
 async function showUserTracks() {
     const resultsDiv = document.getElementById('searchResults');
@@ -463,7 +464,7 @@ async function showUserTracks() {
                 songElement.style.marginTop = '10px';
                 resultsDiv.appendChild(songElement);
                 // Добавляем аудиофайл к найденной песне
-                addAudioToPage(song.path); // Путь к аудиофайлу из данных (поле song.path)
+                // addAudioToPage(song.path); // Путь к аудиофайлу из данных (поле song.path)
             });
         } else {
             resultsDiv.textContent = 'Нет добавленных треков.';
@@ -516,6 +517,3 @@ function addPlaylistsSection(Title) {
 document.addEventListener('DOMContentLoaded', function() {
     showMainPage();
 });
-
-
-
