@@ -213,6 +213,23 @@ app.post('/add', requireAuth, (req, res) => {
   });
 });
 
+// Маршрут для обработки запросов на удаление песни из "Мои треки"
+app.post('/delete', requireAuth, (req, res) => {
+  const { trackId } = req.body;
+  const userId = req.session.userId;
+ 
+  console.log(`Пользователь запросил удаление трека с ID ${trackId}`);
+
+  dbMusic.run('DELETE FROM user_tracks WHERE user_id = ? AND track_id = ?', [userId, trackId], (err) => {
+    if (err) {
+      console.error(err.message);
+      return res.status(500).json({ error: 'Произошла ошибка при удалении трека' });
+    }
+
+    return res.status(200).json({ message: 'Трек успешно удален из "Моих треков"' });
+  });
+});
+
 // Маршрут для получения треков пользователя по userId
 app.get('/tracks', requireAuth, (req, res) => {
   const userId = req.session.userId;

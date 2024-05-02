@@ -192,6 +192,7 @@ function createTrackElement(track) {
         </div>
         <div class="actions">
             <button class="add-to-queue" data-track-id="${track.id}" onclick="addTrackToUser(this)">+</button>
+            <button class="delete-button" data-track-id="${track.id}" style="display: none;" onclick="deleteTrackFromUser(this)">-</button>
             <button class="add-to-playlist">Добавить в плейлист</button>
             <button class="settings">...</button>
         </div>
@@ -364,6 +365,27 @@ function addTrackToUser(button) {
     });
 }
 
+// Функция для удаления трека из "Мои треки"
+function deleteTrackFromUser(button) {
+    // Получаем значение атрибута "data-track-id" кнопки, на которую был клик
+    const trackId = button.dataset.trackId;
+
+    $.ajax({
+       url: '/delete', // URL для отправки запроса
+       method: 'POST',
+       contentType: 'application/json',
+       data: JSON.stringify({ trackId: trackId }), // Отправляем данные в формате JSON
+       success: function(response) {
+           console.log('Трек успешно удален!');
+       },
+       error: function(xhr, status, error) {
+           console.log('Ошибка при удалении трека', xhr.responseJSON.error);
+       }
+   });
+
+   showUserTracks();
+}
+
 document.getElementById('searchInput').addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
         search();
@@ -461,6 +483,7 @@ async function showUserTracks() {
         if (data.length > 0) {
             data.forEach(song => {
                 const songElement = createTrackElement(song);
+                activateButton(songElement);
                 songElement.style.marginTop = '10px';
                 resultsDiv.appendChild(songElement);
                 // Добавляем аудиофайл к найденной песне
@@ -472,6 +495,13 @@ async function showUserTracks() {
     } catch (error) {
         console.error('Ошибка поиска:', error);
     }
+}
+
+// Активируем невидимую кнопку
+function activateButton(track) {
+    var button = track.querySelector('.delete-button');
+    button.style.display = 'block'; // делаем кнопку видимой
+    button.disabled = false; // делаем кнопку активной
 }
 
 function addPlaylistsSection(Title) {
