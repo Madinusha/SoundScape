@@ -79,21 +79,22 @@ function showRegisterPage() {
 function showMyTracks() {
     hideAllBlocks();
     addTracksSection("Мои треки")
-    document.getElementById('my-tracks').style.display = 'block';
 }
 
 
 function showPlaylists() {
     hideAllBlocks();
-    displayPlaylists();
-    document.getElementById('playlists').style.display = 'block';
+    addPlaylistsSection("Мои плейлисты", playlists);
+}
+
+function showAlbums() {
+    hideAllBlocks();
+    addPlaylistsSection("Мои альбомы", playlists);
 }
 
 function showCollections() {
     hideAllBlocks();
-    displayCollections();
-    document.getElementById('collections').style.display = 'block';
-    // Implement functionality to show collections
+    addPlaylistsSection("Подобрали для вас");
 }
 
 function showNewReleases() {
@@ -158,18 +159,10 @@ async function search() {
         const response = await fetch(`/search?term=${encodeURIComponent(searchTerm)}`);
         const data = await response.json();
 
-        const resultsDiv = document.getElementById('searchResults');
-        resultsDiv.innerHTML = '';
-
         if (data.length > 0) {
-            data.forEach(song => {
-                const songElement = createTrackElement(song);
-
-                songElement.style.marginTop = '10px';
-                resultsDiv.appendChild(songElement);
-            });
+            addTracksSection("Результаты поиска", data, true);
         } else {
-            resultsDiv.textContent = 'Ничего не найдено.';
+            addTracksSection("Ничего не найдено.", null, true);
         }
     } catch (error) {
         console.error('Ошибка поиска:', error);
@@ -301,19 +294,12 @@ function createProgressBar(audioPlayer, headerAudioPlayer) {
             playPauseButton.style.backgroundImage = 'url("images/play.png")';
         }
     });
-//??????????????????????
-    const name = audioPlayer.name;
-    const author = audioPlayer.author;
-    const trackInfo = document.createElement('div');
-    trackInfo.classList.add('track-info');
-
 
     const progressBar = document.createElement('input');
     progressBar.classList.add('progress-bar');
     progressBar.type = 'range';
     progressBar.min = 0;
     progressBar.value = 0;
-    progressBar.max = audioPlayer.duration;
     progressBar.step = 1;
 
     progressBar.addEventListener('input', function() {
@@ -324,13 +310,13 @@ function createProgressBar(audioPlayer, headerAudioPlayer) {
         progressBar.value = audioPlayer.currentTime;
     });
 
-    headerAudioPlayer.appendChild(trackInfo);
+    audioPlayer.addEventListener('loadedmetadata', function() {
+        progressBar.max = audioPlayer.duration;
+    });
+
     headerAudioPlayer.appendChild(playPauseButton);
     headerAudioPlayer.appendChild(progressBar);
 }
-
-
-
 
 // Функция для добавления аудиофайла на страницу
 function addAudioToPage(songPath) {
@@ -427,7 +413,7 @@ function handleMenuItemClick(event) {
     link.onclick();
 }
 
-function addTracksSection(Title) {
+function addTracksSection(Title, trackList = myTracks, before = false) {
     const tracksSection = document.createElement('div');
     tracksSection.classList.add('section');
 
@@ -439,13 +425,16 @@ function addTracksSection(Title) {
     const tracksContainer = document.createElement('div');
     tracksContainer.classList.add('tracks-container');
 
-    myTracks.forEach(function(track) {
-        tracksContainer.appendChild(createTrackElement(track));
-    });
+    if (trackList !== null) {
+        trackList.forEach(function(track) {
+            tracksContainer.appendChild(createTrackElement(track));
+        });
+    }
 
     tracksSection.appendChild(tracksContainer);
     const mainContent = document.querySelector('.content');
-    mainContent.appendChild(tracksSection);
+    if (before) mainContent.insertBefore(tracksSection, mainContent.firstChild);
+    else mainContent.appendChild(tracksSection);
 }
 
 async function showUserTracks() {
@@ -453,7 +442,7 @@ async function showUserTracks() {
     resultsDiv.innerHTML = '';
 
     // $.ajax({
-    //     url: '/tracks', 
+    //     url: '/tracks',
     //     method: 'POST',
     //     dataType: 'json', // Ожидаемый тип данных в ответе (JSON)
     //     success: function(data) {
@@ -481,16 +470,9 @@ async function showUserTracks() {
         const data = await response.json();
 
         if (data.length > 0) {
-            data.forEach(song => {
-                const songElement = createTrackElement(song);
-                activateButton(songElement);
-                songElement.style.marginTop = '10px';
-                resultsDiv.appendChild(songElement);
-                // Добавляем аудиофайл к найденной песне
-                // addAudioToPage(song.path); // Путь к аудиофайлу из данных (поле song.path)
-            });
+            addTracksSection("Мои треки", data);
         } else {
-            resultsDiv.textContent = 'Нет добавленных треков.';
+            addTracksSection("Нет добавленных треков", data);
         }
     } catch (error) {
         console.error('Ошибка поиска:', error);
@@ -504,7 +486,7 @@ function activateButton(track) {
     button.disabled = false; // делаем кнопку активной
 }
 
-function addPlaylistsSection(Title) {
+function addPlaylistsSection(Title, playlistList = playlists) {
     const freshHitsSection = document.createElement('div');
     freshHitsSection.classList.add('section');
 
@@ -516,7 +498,7 @@ function addPlaylistsSection(Title) {
     const playlistsContainer = document.createElement('div');
     playlistsContainer.classList.add('playlists-container');
 
-    playlists.forEach(function(playlist) {
+    playlistList.forEach(function(playlist) {
         const playlistItem = document.createElement('div');
         playlistItem.classList.add('playlist');
 
