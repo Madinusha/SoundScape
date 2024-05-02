@@ -413,7 +413,7 @@ function handleMenuItemClick(event) {
     link.onclick();
 }
 
-function addTracksSection(Title, trackList = myTracks, before = false) {
+function addTracksSection(Title, trackList = myTracks, before = false, remove = false) {
     const tracksSection = document.createElement('div');
     tracksSection.classList.add('section');
 
@@ -427,7 +427,9 @@ function addTracksSection(Title, trackList = myTracks, before = false) {
 
     if (trackList !== null) {
         trackList.forEach(function(track) {
-            tracksContainer.appendChild(createTrackElement(track));
+            var song = createTrackElement(track);
+            if (remove) activateButton(song);
+            tracksContainer.appendChild(song);
         });
     }
 
@@ -470,7 +472,7 @@ async function showUserTracks() {
         const data = await response.json();
 
         if (data.length > 0) {
-            addTracksSection("Мои треки", data);
+            addTracksSection("Мои треки", data, false, true);
         } else {
             addTracksSection("Нет добавленных треков", data);
         }
