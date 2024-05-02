@@ -23,14 +23,17 @@ header {
 
 }
 .playPauseButton{
-     background-color: transparent;
-     background-image: center/cover no-repeat;
-     height: 2em;
-     width: 2em;
-     border: none;
-     font-size: 16px;
-     cursor: pointer;
-     margin-right: 10px; /* Расстояние между кнопкой и прогресс-баром */
+    background-color: transparent;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 80%;
+    height: 2em;
+    width: 2em;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    margin-right: 10px; /* Расстояние между кнопкой и прогресс-баром */
 }
 
 .progress-bar {
@@ -50,6 +53,11 @@ header {
     border-radius: 50%;
     cursor: pointer;
 }
+.progress-bar::-webkit-slider-runnable-track {
+    background-color: #ddd; /* Цвет фона трека */
+    border-radius: 2px; /* Радиус скругления углов трека */
+}
+
 
 .progress-bar::-webkit-progress-value {
     background-color: linear-gradient(to right, #7366bd, #FF416C);
