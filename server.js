@@ -230,6 +230,53 @@ app.post('/delete', requireAuth, (req, res) => {
   });
 });
 
+// Маршрут для обработки запросов на получение плейлистов пользователя
+app.get('/playlists', requireAuth, (req, res) => {
+  const userId = req.session.userId;
+
+  dbMusic.get('SELECT * FROM playlists WHERE user_id = ?', [userId], (err, row) => {
+    if (err) {
+      return res.status(500).json({ error: 'Ошибка при выполнении запроса к базе данных.' });
+    }
+
+    if (!row) {
+        return res.status(400).json({ error: 'У пользователя нет плейлистов.' });
+    }
+    console.log(row);
+    res.status(200).json(row);
+  });
+});
+
+// Маршрут для обработки запросов на добавление песни в плейлист
+app.post('/addToPlaylist', requireAuth, (req, res) => {
+  const { trackId } = req.body;
+  const userId = req.session.userId;
+  var playlistID = 1;
+
+  dbMusic.get('SELECT * FROM playlists WHERE user_id = ?', [userId], (err, row) => {
+    if (err) {
+      return res.status(500).json({ error: 'Ошибка при выполнении запроса к базе данных.' });
+    }
+
+    if (!row) {
+        return res.status(400).json({ error: 'У пользователя нет плейлистов.' });
+    }
+
+    playlistID = row.id;
+  });
+ 
+  console.log(`Пользователь запросил добавление трека с ID ${trackId} в плейлист`);
+
+  dbMusic.run('INSERT INTO playlist_tracks (playlist_id, track_id) VALUES (?, ?)', [playlistID, trackId], (err) => {
+    if (err) {
+      console.error(err.message);
+      return res.status(500).json({ error: 'Трек уже добавлен' });
+    }
+
+    return res.status(200).json({ message: 'Пользователь успешно зарегистрирован' });
+  });
+});
+
 // Маршрут для получения треков пользователя по userId
 app.get('/tracks', requireAuth, (req, res) => {
   const userId = req.session.userId;
@@ -241,7 +288,7 @@ app.get('/tracks', requireAuth, (req, res) => {
     } else {
       if (rows.length > 0) {
           // Если найдены песни, отправляем их клиенту
-          res.status(400).json(rows);
+          res.status(200).json(rows);
       } else {
           // Если ничего не найдено, отправляем сообщение
           res.status(400).json({ error: 'Ничего не найдено.' });

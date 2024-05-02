@@ -82,9 +82,31 @@ function showMyTracks() {
 }
 
 
-function showPlaylists() {
+async function showPlaylists() {
     hideAllBlocks();
-    addPlaylistsSection("Мои плейлисты", playlists);
+    try {
+        var playlists = [];
+        const response = await fetch(`/playlists`);
+        const data = await response.json();
+        
+        console.log(data);
+        console.log(data.length);
+        if (data.length > 0) {
+            data.forEach(row => {
+                playlists.push({
+                  name: row.title,
+                  author: row.title,
+                  cover: "images/cover1.jpg"
+                });
+              });
+              addPlaylistsSection("Мои плейлисты", playlists);
+        } else {
+            console.log("here");
+            addPlaylistsSection("Нет плейлистов", playlists);
+        }
+    } catch (error) {
+        console.error('Ошибка поиска:', error);
+    }
 }
 
 function showAlbums() {
@@ -186,7 +208,7 @@ function createTrackElement(track) {
         <div class="actions">
             <button class="add-to-queue" data-track-id="${track.id}" onclick="addTrackToUser(this)">+</button>
             <button class="delete-button" data-track-id="${track.id}" style="display: none;" onclick="deleteTrackFromUser(this)">-</button>
-            <button class="add-to-playlist">Добавить в плейлист</button>
+            <button class="add-to-playlist" data-track-id="${track.id}" onclick="addTrackToPlaylist(this)">Добавить в плейлист</button>
             <button class="settings">...</button>
         </div>
     `;
@@ -370,6 +392,28 @@ function deleteTrackFromUser(button) {
    });
 
    showUserTracks();
+}
+
+// Функция для добавления трека в плейлист
+function addTrackToPlaylist(button) {
+    // Получаем значение атрибута "data-track-id" кнопки, на которую был клик
+    const trackId = button.dataset.trackId;
+
+    // Выводим значение trackId в консоль
+    console.log(`Вы кликнули на кнопку с data-track-id: ${trackId}`);
+
+    $.ajax({
+       url: '/addToPlaylist', // URL для отправки запроса
+       method: 'POST',
+       contentType: 'application/json',
+       data: JSON.stringify({ trackId: trackId }), // Отправляем данные в формате JSON
+       success: function(response) {
+           console.log('Трек успешно добавлен к пользователю!');
+       },
+       error: function(xhr, status, error) {
+           console.log('Ошибка при добавлении трека к пользователю:', xhr.responseJSON.error);
+       }
+   });
 }
 
 document.getElementById('searchInput').addEventListener('keypress', function (e) {
