@@ -78,7 +78,8 @@ function showRegisterPage() {
 
 function showMyTracks() {
     hideAllBlocks();
-    addTracksSection("Мои треки")
+//    showUserTracks();
+    //  addTracksSection("Мои треки", getUserTracks());
 }
 
 
@@ -426,7 +427,7 @@ function addTracksSection(Title, trackList = myTracks, before = false, remove = 
     tracksContainer.classList.add('tracks-container');
 
     if (trackList !== null) {
-        trackList.forEach(function(track) {
+        trackList.forEach(track => {
             var song = createTrackElement(track);
             if (remove) activateButton(song);
             tracksContainer.appendChild(song);
@@ -438,10 +439,19 @@ function addTracksSection(Title, trackList = myTracks, before = false, remove = 
     if (before) mainContent.insertBefore(tracksSection, mainContent.firstChild);
     else mainContent.appendChild(tracksSection);
 }
+async function getUserTracks() {
+    try {
+        const response = await fetch(`/tracks`);
+        const data = await response.json();
+
+        return data;
+    } catch (error) {
+        return null;
+        console.error('Ошибка поиска:', error);
+    }
+}
 
 async function showUserTracks() {
-    const resultsDiv = document.getElementById('searchResults');
-    resultsDiv.innerHTML = '';
 
     // $.ajax({
     //     url: '/tracks',
@@ -467,6 +477,7 @@ async function showUserTracks() {
     //     }
     // });
 
+    hideAllBlocks();
     try {
         const response = await fetch(`/tracks`);
         const data = await response.json();
