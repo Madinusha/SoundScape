@@ -92,15 +92,28 @@ async function showPlaylists() {
         
         console.log(data);
         console.log(data.length);
-        if (data.length > 0) {
-            data.forEach(row => {
+        if (data) {
+           // Проверяем, что data не является пустым и является объектом
+            if (typeof data === 'object' && !Array.isArray(data)) {
+                // Создаем плейлист на основе единственного объекта
                 playlists.push({
-                  name: row.title,
-                  author: row.title,
-                  cover: "images/cover1.jpg"
+                    name: data.title,
+                    author: data.title,
+                    cover: "images/cover1.jpg",
+                    id: row.id
                 });
-              });
-              addPlaylistsSection("Мои плейлисты", playlists);
+            } else if (Array.isArray(data)) {
+                // Если data является массивом, то выполняем преобразование данных
+                data.forEach(row => {
+                    playlists.push({
+                        name: row.title,
+                        author: row.title,
+                        cover: "images/cover1.jpg",
+                        id: row.id
+                    });
+                });
+            }
+            addPlaylistsSection("Мои плейлисты", playlists, true);
         } else {
             console.log("here");
             addPlaylistsSection("Нет плейлистов", playlists);
@@ -454,8 +467,6 @@ function handleMenuItemClick(event) {
 
 
     var menuItem = event.currentTarget.parentNode;
-    var link = menuItem.querySelector('a');
-    link.onclick();
 }
 
 function addTracksSection(Title, trackList = myTracks, before = false, remove = false) {
@@ -543,7 +554,7 @@ function activateButton(track) {
     button.disabled = false; // делаем кнопку активной
 }
 
-function addPlaylistsSection(Title, playlistList = playlists) {
+function addPlaylistsSection(Title, playlistList = playlists, myPlaylists = false) {
     const freshHitsSection = document.createElement('div');
     freshHitsSection.classList.add('section');
 
@@ -558,6 +569,7 @@ function addPlaylistsSection(Title, playlistList = playlists) {
     playlistList.forEach(function(playlist) {
         const playlistItem = document.createElement('div');
         playlistItem.classList.add('playlist');
+        if (myPlaylists) playlistItem.dataset.id = playlist.id; 
 
         const coverImg = document.createElement('img');
         coverImg.src = playlist.cover;
@@ -573,6 +585,12 @@ function addPlaylistsSection(Title, playlistList = playlists) {
         author.textContent = playlist.author;
         playlistItem.appendChild(author);
         author.classList.add('playlist-author')
+        
+        if (myPlaylists) 
+        // Добавляем обработчик события click
+        playlistItem.addEventListener('click', function() {
+            showTracksFromPlaylist(playlist.id, playlist.title); // Вызываем функцию showTracks() с id плейлиста
+    });
 
         playlistsContainer.appendChild(playlistItem);
     });
@@ -581,6 +599,24 @@ function addPlaylistsSection(Title, playlistList = playlists) {
 
     const mainContent = document.querySelector('.content');
     mainContent.appendChild(freshHitsSection);
+}
+
+async function showTracksFromPlaylist(id, title) {
+    hideAllBlocks();
+    try {
+        const response = await fetch(`/tracksFromPlaylist?term=${id}`);
+        const data = await response.json();
+
+        console.log(data);
+
+        if (data.length > 0) {
+            addTracksSection("Треки из плейлиста", data);
+        } else {
+            addTracksSection("Нет добавленных треков", data);
+        }
+    } catch (error) {
+        console.error('Ошибка поиска:', error);
+    }
 }
 
 document.addEventListener('DOMContentLoaded', function() {

@@ -187,7 +187,7 @@ app.get('/search', (req, res) => {
       } else {
           if (rows.length > 0) {
               // Если найдены песни, отправляем их клиенту
-              res.status(400).json(rows);
+              res.status(200).json(rows);
           } else {
               // Если ничего не найдено, отправляем сообщение
               res.status(400).json({ error: 'Ничего не найдено.' });
@@ -234,7 +234,7 @@ app.post('/delete', requireAuth, (req, res) => {
 app.get('/playlists', requireAuth, (req, res) => {
   const userId = req.session.userId;
 
-  dbMusic.get('SELECT * FROM playlists WHERE user_id = ?', [userId], (err, row) => {
+  dbMusic.all('SELECT * FROM playlists WHERE user_id = ?', [userId], (err, row) => {
     if (err) {
       return res.status(500).json({ error: 'Ошибка при выполнении запроса к базе данных.' });
     }
@@ -244,6 +244,37 @@ app.get('/playlists', requireAuth, (req, res) => {
     }
     console.log(row);
     res.status(200).json(row);
+  });
+});
+
+// Маршрут для обработки запросов на получение песен из плейлиста пользователя
+app.get('/tracksFromPlaylist', requireAuth, (req, res) => {
+  const searchTerm = req.query.term; // Получаем текст поискового запроса из параметра запроса
+
+  if (!searchTerm) {
+      res.status(400).json({ error: 'Ошибка поиска' });
+  }
+
+  console.log(searchTerm);
+
+  // Используем параметризированный SQL-запрос для поиска песен
+  const sql = `SELECT tracks.* FROM playlist_tracks
+               JOIN tracks ON playlist_tracks.track_id = tracks.id
+               WHERE playlist_tracks.playlist_id = ?`;
+  const query = `${searchTerm}`; // Поиск частичного совпадения
+
+  dbMusic.all(sql, [query], (err, rows) => {
+      if (err) {
+          res.status(500).json({ error: 'Ошибка запроса' });
+      } else {
+          if (rows.length > 0) {
+              // Если найдены песни, отправляем их клиенту
+              res.status(200).json(rows);
+          } else {
+              // Если ничего не найдено, отправляем сообщение
+              res.status(400).json({ error: 'Ничего не найдено.' });
+          }
+      }
   });
 });
 
