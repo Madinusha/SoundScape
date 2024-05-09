@@ -53,9 +53,14 @@ app.post('/logout', (req, res) => {
   }
 });
 
-// Маршрут для отображения основной страницы
+// Маршрут для отображения стартовой страницы
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(path.join(__dirname, 'public', 'startpage', 'startpage.html'));
+});
+
+// Маршрут для отображения основной страницы
+app.get('/main', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'main.html'));
 });
 
 // Маршрут для отображения страницы регистрации

@@ -52,7 +52,7 @@ $(document).ready(function() {
 		data: JSON.stringify({ email: email, password: password }), // Данные для отправки
 		success: function(response) {
 		  alert(response.message); // Выводим сообщение об успешной регистрации
-		  window.location.href = '/';
+		  window.location.href = '/main';
 		},
 		error: function(xhr, status, error) {
 		  const errorMessage = xhr.responseJSON ? xhr.responseJSON.error : 'Ошибка сервера';
