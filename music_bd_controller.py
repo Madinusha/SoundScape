@@ -3,13 +3,13 @@ import sqlite3, os
 from mutagen.mp3 import MP3
 from mutagen.id3 import ID3, APIC
 
-def create_mp3_table():
+def create_music_db():
     '''Создаёт таблицу музыки и тэгов в базе данных'''
     conn = sqlite3.connect('music.db')
 
     cur = conn.cursor()
 
-    cur.execute('''CREATE TABLE tracks (
+    cur.execute('''CREATE TABLE IF NOT EXISTS tracks (
                     id INTEGER PRIMARY KEY,
                     path TEXT,
                     album_img_path TEXT,
@@ -69,7 +69,6 @@ def get_mp3_tags(mp3):
 def add_track_to_db(mp3):
     '''Добавляет mp3-трек в базу данных'''
     connection = sqlite3.connect('music.db')
-
     cursor = connection.cursor()
 
     path_array = mp3.split('\\')
@@ -90,9 +89,64 @@ def add_tracks_to_db(dir):
         add_track_to_db(track)
 
 
+def create_genres_rate_table():
+    connection = sqlite3.connect('music.db')
+    cursor = connection.cursor()
+
+    genres_list_all = cursor.execute('SELECT genre FROM tracks')
+    genres_list = []
+    for genre in genres_list_all:
+        if genre not in genres_list:
+            genres_list.append(genre)
+    genres_list = [genre[0] for genre in genres_list]
+
+    table_name = 'genres_rate_table'
+    columns = ['genre'] + genres_list
+
+    column_definitions = ', '.join([f'"{col}" INTEGER DEFAULT 0' for col in columns])
+    create_table_query = f"CREATE TABLE {table_name} ({column_definitions})"
+    cursor.execute(create_table_query)
+
+    # Заполняем первый столбец "genre" значениями из списка "genres_list"
+    for genre in genres_list:
+        insert_query = f"INSERT INTO {table_name} (genre) VALUES (?)"
+        cursor.execute(insert_query, (genre,))
+
+    for genre in genres_list:
+        update_query = f"UPDATE {table_name} SET '{genre}' = 10 WHERE genre = '{genre}'"
+        cursor.execute(update_query)
+
+    connection.commit()
+    connection.close()
+
+
+def update_genre_rate(genre1, genre2, value):
+    connection = sqlite3.connect('music.db')
+    cursor = connection.cursor()
+
+    table_name = 'genres_rate_table'
+
+    # Проверяем, существует ли переданные жанры в таблице
+    cursor.execute(f"SELECT 1 FROM {table_name} WHERE genre = ? OR genre = ?", (genre1, genre2))
+    exists = cursor.fetchone()
+
+    if exists:
+        # Обновляем значение для первого жанра
+        cursor.execute(f"UPDATE {table_name} SET '{genre1}' = ? WHERE genre = ?", (value, genre2))
+        # Обновляем значение для второго жанра
+        cursor.execute(f"UPDATE {table_name} SET '{genre2}' = ? WHERE genre = ?", (value, genre1))
+
+        connection.commit()
+        connection.close()
+        print(f"Значение {value} успешно установлено для жанров {genre1} и {genre2} в таблице {table_name}")
+    else:
+        print("Один или оба из переданных жанров не существуют в таблице.")
+
 
 if __name__ == '__main__':
-    create_mp3_table()
+    create_music_db()
     album_path = 'music'
-    # m_album_path = 'music//Монеточка'
     add_tracks_to_db(album_path)
+    create_genres_rate_table()
+    update_genre_rate('Азиатская музыка', 'rock', -5)
+    update_genre_rate('Азиатская музыка', 'local-indie', 3)

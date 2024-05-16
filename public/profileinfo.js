@@ -9,9 +9,9 @@ $(document).ready(function() {
         url: '/profileInfo',
         method: 'GET',
         success: function(data) {
-            id.innerText = data.id;
+//            id.innerText = data.id;
             nickname.innerText = data.nickname;
-            type.innerText = data.type;
+//            type.innerText = data.type;
             email.innerText = data.email;
         },
         error: function(err) {
