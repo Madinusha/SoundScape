@@ -15,8 +15,8 @@ const playlists = [
     { name: "Лимонад", author: "ЛСП", cover: "images/cover3.jpg"},
     { name: "Permission to dance", author: "BTS", cover: "images/cover1.jpg"},
     { name: "DNA", author: "BTS", cover: "images/cover2.jpg"},
-        { name: "Лимонад", author: "ЛСП", cover: "images/cover3.jpg"},
-        { name: "Permission to dance", author: "BTS", cover: "images/cover1.jpg"},
+    { name: "Лимонад", author: "ЛСП", cover: "images/cover3.jpg"},
+    { name: "Permission to dance", author: "BTS", cover: "images/cover1.jpg"},
     { name: "DNA", author: "BTS", cover: "images/cover2.jpg"},
     { name: "DNA", author: "BTS", cover: "images/cover2.jpg"},
     { name: "Лимонад", author: "ЛСП", cover: "images/cover3.jpg"}
@@ -33,7 +33,6 @@ function displayMyTracks() {
     const myTracksBlock = document.getElementById('my-tracks');
     myTracksBlock.innerHTML = '';
     myTracks.forEach(track => {
-
         myTracksBlock.appendChild(createTrackElement(track));
     });
 }
@@ -248,7 +247,7 @@ function createTrackElement(track) {
                 audioPlayer.artist = track.artist;
                 audioPlayer.title = track.name;
 
-                createHeaderPlayer(audioPlayer, headerAudioPlayer);
+                createHeaderPlayer(audioPlayer, headerAudioPlayer, track);
 
 
                 // Добавление плеера в хедер
@@ -265,7 +264,6 @@ function createTrackElement(track) {
     }
     return trackElement;
 }
-
 
 let currentAudio = null; // Глобальная переменная для отслеживания текущего проигрывателя
 let currentAudioSrc = null;
@@ -305,43 +303,36 @@ function playOrPause(headerAudioElement, trackElement) {
 }
 
 
-function createHeaderPlayer(audioPlayer, headerAudioPlayer){
+function createHeaderPlayer(audioPlayer, headerAudioPlayer, track){
     console.log("audioPlayer.title - " + audioPlayer.title);
     headerAudioPlayer.innerHTML = `
-        <div id="player-track">
-              <div class="scrolling-text-container">
-                  <div id="track-name">${audioPlayer.title}</div>
-              </div>
-              <div class="scrolling-text-container">
-                  <div id="track-artist">${audioPlayer.artist}</div>
-              </div>
+        <button class="prev-button"></button>
+        <div id="player">
+            <div class="play-button">
+                <button class="play-pause-button"></button>
+            </div>
+            <img src="${track.album_img_path}" alt="Track Cover" class="header-cover-image">
+            <div id="player-track">
 
-              <div id="track-time">
-                    <div id="current-time">0:00</div>
-                    <div id="track-length"></div>
-              </div>
-              <div id="s-area">
-                    <div id="ins-time"></div>
-                    <div id="s-hover"></div>
-                    <div id="seek-bar"></div>
-              </div>
+                  <div class="scrolling-text-container">
+                      <div id="track-name">${audioPlayer.title}</div>
+                  </div>
+                  <div class="scrolling-text-container">
+                      <div id="track-artist">${audioPlayer.artist}</div>
+                  </div>
+
+                  <div id="track-time">
+                        <div id="current-time">0:00</div>
+                        <div id="track-length"></div>
+                  </div>
+                  <div id="s-area">
+                        <div id="ins-time"></div>
+                        <div id="s-hover"></div>
+                        <div id="seek-bar"></div>
+                  </div>
+            </div>
         </div>
-        <div id="player-content">
-                    <div class="control">
-                          <div class="button" id="play-previous">
-                                <i class="fas fa-backward"><-</i>
-                          </div>
-                    </div>
-                    <div class="control">
-                          <div class="button" id="play-pause-button">
-                                <i class="fas fa-play">||</i>
-                          </div>
-                    </div>
-                    <div class="control">
-                          <div class="button" id="play-next">
-                                <i class="fas fa-forward">-></i>
-                          </div>
-                    </div>
+        <button class="next-button"></button>
     `;
     var sBar = document.getElementById('seek-bar');
     var sArea = document.getElementById('s-area');
@@ -373,6 +364,18 @@ function createHeaderPlayer(audioPlayer, headerAudioPlayer){
         trackLength.innerText = (audioPlayer.duration / 60).toFixed(2);
         console.log("я в loadedmetadata у audioPlayer");
     });
+    const playPauseButton = headerAudioPlayer.querySelector('.play-pause-button');
+        playPauseButton.style.opacity = '0.4';
+        playPauseButton.style.backgroundImage = 'url("images/pause.png")';
+        playPauseButton.addEventListener('click', function() {
+            if (audioPlayer.paused) {
+                audioPlayer.play();
+                playPauseButton.style.backgroundImage = 'url("images/pause.png")'; // Показываем изображение паузы
+            } else {
+                audioPlayer.pause();
+                playPauseButton.style.backgroundImage = 'url("images/play.png")'; // Показываем изображение проигрывания
+            }
+        });
 }
 
 document.addEventListener('DOMContentLoaded', function() {

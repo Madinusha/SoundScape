@@ -20,12 +20,6 @@ header {
 
 }
 
-.headerAudioPlayer {
-    display: flex;
-    align-items: center;
-    height: 100%;
-
-}
 .playPauseButton{
     background-color: transparent;
     background-size: contain;
@@ -167,7 +161,6 @@ header {
     background-color: rgba(255, 255, 255, 0.3);
 }
 
-
 /* Стили для обложки трека */
 .cover-image {
     width: 50px; /* Задайте ширину и высоту вашей обложки */
@@ -197,14 +190,18 @@ header {
     top: 0;
     left: 0;
     background: black;
+    border-radius: 5px;
     border: none;
     cursor: pointer;
     opacity: 0;
+    background-repeat: no-repeat;
+    background-position: center; /* Центрирование по горизонтали и вертикали */
+    background-size: 50%;
+    background-opacity: 1;
 }
 
 .playing {
     background-color: rgba(255, 255, 255, 0.3);
-
 }
 
 /* Стили для текста плейлиста */
@@ -248,6 +245,7 @@ header {
     display: flex;
     overflow-x: auto;
     padding-bottom: 10px;
+    gap: 5px;
 }
 .playlist {
     padding-right: 0.3em;
@@ -280,6 +278,9 @@ header {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* добавление тени */
     background-color: rgba(0, 0, 0, 0.5); /* цвет пленочки */
     cursor: pointer; /* изменение курсора при наведении */
+}
+.playlist img:active {
+    background-color: rgba(0, 0, 0, 0.6); /* цвет пленочки */
 }
 
 
@@ -398,24 +399,70 @@ input[type="text"]:focus  {
 }
 
 
+#headerAudioPlayer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5px;
+}
 
+.prev-button,
+.next-button {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    background: none;
+    border: none;
+    background-repeat: no-repeat;
+    background-position: center; /* Центрирование по горизонтали и вертикали */
+    background-size: 50%;
+}
 
+.prev-button {
+    background-image: url('images/nextButton.png');
+    transform: scaleX(-1);
+}
 
+.next-button{
+    background-image: url('images/nextButton.png');
+}
+.prev-button:hover,
+.next-button:hover {
+    background-color: rgba(255, 247, 247, 0.4)
+}
+.prev-button:active,
+.next-button:active {
+    background-color: rgba(255, 247, 247, 0.2)
+}
+
+#player {
+    display: flex;
+    height: 100%;
+    position: relative;
+    align-items: center;
+    padding:  10px 10px;
+    border-radius: 7px;
+    background: rgba(255, 247, 247, 0.7)
+}
 
 #player-track {
-  /*position: absolute;*/
   width: 200px;
-
   height: 50px;
-  /*padding: 13px 22px 10px 100px;*/
-  padding: 10px 20px;
-  background-color: #fff7f7;
-  border-radius: 15px;
+  /*padding: 10px 20px;*/
+  /*ackground-color: #fff7f7;*/
   z-index: 1;
 }
 
 #player-track.active {
-  top: -92px;
+    top: -92px;
+}
+
+.header-cover-image {
+    width: 50px; /* Задайте ширину и высоту вашей обложки */
+    height: 50px;
+    margin-right: 10px;
+    border-radius: 5px;
+
 }
 
 #track-name {
@@ -425,8 +472,8 @@ input[type="text"]:focus  {
 }
 
 #track-artist {
-    color: #acaebd;
     font-size: 12px;
+    color: gray;
 }
 
 .scrolling-text-container {
@@ -440,6 +487,7 @@ input[type="text"]:focus  {
     position: absolute; /* Абсолютное позиционирование текста */
     white-space: nowrap; /* Предотвращение переноса текста на новую строку */
     animation: scroll 7s linear infinite; /* Анимация скроллинга */
+
 }
 
 @keyframes scroll {
