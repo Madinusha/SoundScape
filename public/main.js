@@ -15,6 +15,9 @@ const playlists = [
     { name: "Лимонад", author: "ЛСП", cover: "images/cover3.jpg"},
     { name: "Permission to dance", author: "BTS", cover: "images/cover1.jpg"},
     { name: "DNA", author: "BTS", cover: "images/cover2.jpg"},
+        { name: "Лимонад", author: "ЛСП", cover: "images/cover3.jpg"},
+        { name: "Permission to dance", author: "BTS", cover: "images/cover1.jpg"},
+    { name: "DNA", author: "BTS", cover: "images/cover2.jpg"},
     { name: "DNA", author: "BTS", cover: "images/cover2.jpg"},
     { name: "Лимонад", author: "ЛСП", cover: "images/cover3.jpg"}
 ];
@@ -89,7 +92,7 @@ async function showPlaylists() {
         var playlists = [];
         const response = await fetch(`/playlists`);
         const data = await response.json();
-        
+
         console.log(data);
         console.log(data.length);
         if (data) {
@@ -122,7 +125,6 @@ async function showPlaylists() {
         console.error('Ошибка поиска:', error);
     }
 }
-
 function showAlbums() {
     hideAllBlocks();
     addPlaylistsSection("Мои альбомы", playlists);
@@ -141,7 +143,7 @@ function showNewReleases() {
 
 function showMainPage() {
     hideAllBlocks();
-    addTracksSection("Мои треки");
+    addTracksSection("Рекомендации");
     addPlaylistsSection("Свежие хиты");
     addPlaylistsSection("Рекомендации для вас");
     addPlaylistsSection("Сегодня в тренде");
@@ -222,7 +224,7 @@ function createTrackElement(track) {
         <div class="actions">
             <button class="add-to-queue" data-track-id="${track.id}" onclick="addTrackToUser(this)">+</button>
             <button class="delete-button" data-track-id="${track.id}" style="display: none;" onclick="deleteTrackFromUser(this)">-</button>
-            <button class="add-to-playlist" data-track-id="${track.id}" onclick="addTrackToPlaylist(this)">Добавить в плейлист</button>
+            <button class="add-to-playlist">Добавить в плейлист</button>
             <button class="settings">...</button>
         </div>
     `;
@@ -243,7 +245,8 @@ function createTrackElement(track) {
                 audioPlayer.controlsList = "nodownload";
                 audioPlayer.src = track.path;
                 audioPlayer.style.display = 'none';
-
+                audioPlayer.artist = track.artist;
+                audioPlayer.title = track.name;
 
                 createHeaderPlayer(audioPlayer, headerAudioPlayer);
 
@@ -301,6 +304,77 @@ function playOrPause(headerAudioElement, trackElement) {
     }
 }
 
+
+function createHeaderPlayer(audioPlayer, headerAudioPlayer){
+    console.log("audioPlayer.title - " + audioPlayer.title);
+    headerAudioPlayer.innerHTML = `
+        <div id="player-track">
+              <div class="scrolling-text-container">
+                  <div id="track-name">${audioPlayer.title}</div>
+              </div>
+              <div class="scrolling-text-container">
+                  <div id="track-artist">${audioPlayer.artist}</div>
+              </div>
+
+              <div id="track-time">
+                    <div id="current-time">0:00</div>
+                    <div id="track-length"></div>
+              </div>
+              <div id="s-area">
+                    <div id="ins-time"></div>
+                    <div id="s-hover"></div>
+                    <div id="seek-bar"></div>
+              </div>
+        </div>
+        <div id="player-content">
+                    <div class="control">
+                          <div class="button" id="play-previous">
+                                <i class="fas fa-backward"><-</i>
+                          </div>
+                    </div>
+                    <div class="control">
+                          <div class="button" id="play-pause-button">
+                                <i class="fas fa-play">||</i>
+                          </div>
+                    </div>
+                    <div class="control">
+                          <div class="button" id="play-next">
+                                <i class="fas fa-forward">-></i>
+                          </div>
+                    </div>
+    `;
+    var sBar = document.getElementById('seek-bar');
+    var sArea = document.getElementById('s-area');
+    var currentTimeDisplay = document.getElementById('current-time');
+    var trackLength = document.getElementById('track-length');
+
+    sArea.addEventListener('click', function(event) {
+        console.log("я в click у sArea");
+        // Получаем координаты клика относительно sArea
+        var clickX = event.clientX - sArea.getBoundingClientRect().left;
+        // Вычисляем процентное значение ширины sBar относительно sArea
+        var percentage = (clickX / sArea.offsetWidth) * 100;
+        sBar.style.width = percentage + "%";
+        audioPlayer.currentTime = (percentage / 100) * audioPlayer.duration;
+    });
+
+
+    // Обновление текущего времени воспроизведения аудио
+    audioPlayer.addEventListener('timeupdate', function() {
+        var currentTime = audioPlayer.currentTime;
+        var minutes = Math.floor(currentTime / 60);
+        var seconds = Math.floor(currentTime - minutes * 60);
+        currentTimeDisplay.textContent = minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+
+        sBar.style.width = ((currentTime / audioPlayer.duration) * 100) + "%";
+        console.log("я в timeupdate у audioPlayer");
+    });
+    audioPlayer.addEventListener('loadedmetadata', function() {
+        trackLength.innerText = (audioPlayer.duration / 60).toFixed(2);
+        console.log("я в loadedmetadata у audioPlayer");
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const playButtons = document.querySelectorAll(".play-pause-button");
     playButtons.forEach(button => {
@@ -310,49 +384,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
-
-
-function createHeaderPlayer(audioPlayer, headerAudioPlayer){
-    createProgressBar(audioPlayer, headerAudioPlayer);
-}
-
-
-function createProgressBar(audioPlayer, headerAudioPlayer) {
-    const playPauseButton = document.createElement('button');
-    playPauseButton.classList.add('playPauseButton');
-    playPauseButton.style.backgroundImage = 'url("images/pause.png")';
-    playPauseButton.addEventListener('click', function() {
-        if (audioPlayer.paused) {
-            audioPlayer.play();
-            playPauseButton.style.backgroundImage = 'url("images/pause.png")';
-        } else {
-            audioPlayer.pause();
-            playPauseButton.style.backgroundImage = 'url("images/play.png")';
-        }
-    });
-
-    const progressBar = document.createElement('input');
-    progressBar.classList.add('progress-bar');
-    progressBar.type = 'range';
-    progressBar.min = 0;
-    progressBar.value = 0;
-    progressBar.step = 1;
-
-    progressBar.addEventListener('input', function() {
-        audioPlayer.currentTime = progressBar.value;
-    });
-
-    audioPlayer.addEventListener('timeupdate', function() {
-        progressBar.value = audioPlayer.currentTime;
-    });
-
-    audioPlayer.addEventListener('loadedmetadata', function() {
-        progressBar.max = audioPlayer.duration;
-    });
-
-    headerAudioPlayer.appendChild(playPauseButton);
-    headerAudioPlayer.appendChild(progressBar);
-}
 
 // Функция для добавления аудиофайла на страницу
 function addAudioToPage(songPath) {
@@ -407,7 +438,6 @@ function deleteTrackFromUser(button) {
 
    showUserTracks();
 }
-
 // Функция для добавления трека в плейлист
 function addTrackToPlaylist(button) {
     // Получаем значение атрибута "data-track-id" кнопки, на которую был клик
@@ -554,7 +584,7 @@ function activateButton(track) {
     button.disabled = false; // делаем кнопку активной
 }
 
-function addPlaylistsSection(Title, playlistList = playlists, myPlaylists = false) {
+function addPlaylistsSection(Title, playlistList = playlists) {
     const freshHitsSection = document.createElement('div');
     freshHitsSection.classList.add('section');
 
@@ -569,7 +599,6 @@ function addPlaylistsSection(Title, playlistList = playlists, myPlaylists = fals
     playlistList.forEach(function(playlist) {
         const playlistItem = document.createElement('div');
         playlistItem.classList.add('playlist');
-        if (myPlaylists) playlistItem.dataset.id = playlist.id; 
 
         const coverImg = document.createElement('img');
         coverImg.src = playlist.cover;
@@ -585,12 +614,6 @@ function addPlaylistsSection(Title, playlistList = playlists, myPlaylists = fals
         author.textContent = playlist.author;
         playlistItem.appendChild(author);
         author.classList.add('playlist-author')
-        
-        if (myPlaylists) 
-        // Добавляем обработчик события click
-        playlistItem.addEventListener('click', function() {
-            showTracksFromPlaylist(playlist.id, playlist.title); // Вызываем функцию showTracks() с id плейлиста
-    });
 
         playlistsContainer.appendChild(playlistItem);
     });
@@ -600,7 +623,6 @@ function addPlaylistsSection(Title, playlistList = playlists, myPlaylists = fals
     const mainContent = document.querySelector('.content');
     mainContent.appendChild(freshHitsSection);
 }
-
 async function showTracksFromPlaylist(id, title) {
     hideAllBlocks();
     try {
@@ -619,6 +641,8 @@ async function showTracksFromPlaylist(id, title) {
     }
 }
 
+
 document.addEventListener('DOMContentLoaded', function() {
     showMainPage();
 });
+
