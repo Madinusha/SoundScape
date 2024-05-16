@@ -302,6 +302,52 @@ header {
     cursor: pointer;
 }
 
+
+.tracksFromPlaylistSection{
+    border-radius: 7px;
+    background: linear-gradient(to right, rgba(255, 65, 108, 0.7), rgba(115, 102, 189, 0.7));
+    box-shadow: 0 5px 7px rgba(0,0,0,0.25),
+                0 5px 5px rgba(0,0,0,0.22);
+    color: white;
+    padding: 1em;
+    margin: 0;
+    margin-top: 0.7em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5px;
+}
+
+#bigPlaylist{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+    width: 50%;
+    gap: 10px;
+}
+.big_playlist_image{
+    border-radius: 10px;
+    width: 80%;
+}
+.big_playlist_title{
+    font: 30px;
+    font-weight: bold;
+}
+.big_playlist_artist{
+    font: 30px;
+    font-weight: bold;
+}
+#tracksFromBigPlaylist{
+
+}
+
+
+
+
+
+
+
 .avatar-button {
     width: 1.5em;
     height: 1.5em;

@@ -10,16 +10,16 @@ const myTracks = [
 
 
 const playlists = [
-    { name: "Permission to dance", author: "BTS", cover: "images/cover1.jpg"},
+    { name: "Permission to dance", author: "BTS", cover: "images/cover1.jpg", tracks: myTracks},
+    { name: "DNA", author: "BTS", cover: "images/cover2.jpg", tracks: myTracks},
+    { name: "Лимонад", author: "ЛСП", cover: "images/cover3.jpg", tracks: myTracks},
+    { name: "Permission to dance", author: "BTS", cover: "images/cover1.jpg", tracks: myTracks},
     { name: "DNA", author: "BTS", cover: "images/cover2.jpg"},
     { name: "Лимонад", author: "ЛСП", cover: "images/cover3.jpg"},
-    { name: "Permission to dance", author: "BTS", cover: "images/cover1.jpg"},
-    { name: "DNA", author: "BTS", cover: "images/cover2.jpg"},
-    { name: "Лимонад", author: "ЛСП", cover: "images/cover3.jpg"},
-    { name: "Permission to dance", author: "BTS", cover: "images/cover1.jpg"},
-    { name: "DNA", author: "BTS", cover: "images/cover2.jpg"},
-    { name: "DNA", author: "BTS", cover: "images/cover2.jpg"},
-    { name: "Лимонад", author: "ЛСП", cover: "images/cover3.jpg"}
+    { name: "Permission to dance", author: "BTS", cover: "images/cover1.jpg", tracks: myTracks},
+    { name: "DNA", author: "BTS", cover: "images/cover2.jpg", tracks: myTracks},
+    { name: "DNA", author: "BTS", cover: "images/cover2.jpg", tracks: myTracks},
+    { name: "Лимонад", author: "ЛСП", cover: "images/cover3.jpg", tracks: myTracks}
 ];
 
 const collections = [
@@ -149,14 +149,18 @@ function showMainPage() {
 }
 
 function hideAllBlocks() {
-    const blocks = document.querySelectorAll('.block');
-    const sections = document.querySelectorAll('.section');
-    sections.forEach(section => {
-            section.style.display = 'none';
-        });
-    blocks.forEach(block => {
-        block.style.display = 'none';
-    });
+    const mainContent = document.querySelector('.content');
+    mainContent.innerHTML = ``;
+
+
+//    const blocks = document.querySelectorAll('.block');
+//    const sections = document.querySelectorAll('.section');
+//    sections.forEach(section => {
+//            section.style.display = 'none';
+//        });
+//    blocks.forEach(block => {
+//        block.style.display = 'none';
+//    });
 }
 
 function goToProfile() {
@@ -619,6 +623,11 @@ function addPlaylistsSection(Title, playlistList = playlists) {
         author.classList.add('playlist-author')
 
         playlistsContainer.appendChild(playlistItem);
+
+        coverImg.addEventListener('click', function(event) {
+            hideAllBlocks();
+            addTracksFromPlaylist(playlist);
+        });
     });
 
     freshHitsSection.appendChild(playlistsContainer);
@@ -626,6 +635,37 @@ function addPlaylistsSection(Title, playlistList = playlists) {
     const mainContent = document.querySelector('.content');
     mainContent.appendChild(freshHitsSection);
 }
+
+function addTracksFromPlaylist(playlistElement){
+    const tracksFromPlaylistSection = document.createElement('div');
+    tracksFromPlaylistSection.classList.add('tracksFromPlaylistSection');
+
+    tracksFromPlaylistSection.innerHTML = `
+        <div id="bigPlaylist">
+            <img src="${playlistElement.cover}" alt="Playlist Cover" class="big_playlist_image">
+            <div class="big_playlist_title">${playlistElement.name}</div>
+            <div class="big_playlist_artist">${playlistElement.author }</div>
+        </div>
+        <div id="tracksFromBigPlaylist">
+        </div>
+    `;
+    console.log("name - " + playlistElement.name);
+    console.log("author - " + playlistElement.author);
+
+    const mainContent = document.querySelector('.content');
+    mainContent.appendChild(tracksFromPlaylistSection);
+    const tracksFromBigPlaylist = document.getElementById('tracksFromBigPlaylist');
+    (playlistElement.tracks).forEach(function(track) {
+        tracksFromBigPlaylist.appendChild(createTrackElement(track));
+    });
+
+
+
+
+//    const mainContent = document.querySelector('.content');
+    mainContent.appendChild(tracksFromPlaylistSection);
+}
+
 async function showTracksFromPlaylist(id, title) {
     hideAllBlocks();
     try {
