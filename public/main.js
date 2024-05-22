@@ -4,6 +4,12 @@ const myTracks = [
     { name: "DNA", artist: "BTS", duration: "4:15", album_img_path: "images/cover2.jpg", path: "music/Jongkook/GOLDEN/01 - 3D (feat. Jack Harlow).mp3"},
     { name: "Лимонад", artist: "ЛСП", duration: "2:50", album_img_path: "images/cover3.jpg", path: "music/Jongkook/GOLDEN/01 - 3D (feat. Jack Harlow).mp3"},
     { name: "Permission to dance", artist: "BTS", duration: "3:30", album_img_path: "images/cover1.jpg", path: "music/Jongkook/GOLDEN/01 - 3D (feat. Jack Harlow).mp3"},
+     { name: "DNA", artist: "BTS", duration: "4:15", album_img_path: "images/cover2.jpg", path: "music/Jongkook/GOLDEN/01 - 3D (feat. Jack Harlow).mp3"},
+        { name: "Лимонад", artist: "ЛСП", duration: "2:50", album_img_path: "images/cover3.jpg", path: "music/Jongkook/GOLDEN/01 - 3D (feat. Jack Harlow).mp3"},
+        { name: "Permission to dance", artist: "BTS", duration: "3:30", album_img_path: "images/cover1.jpg", path: "music/Jongkook/GOLDEN/01 - 3D (feat. Jack Harlow).mp3"},
+         { name: "DNA", artist: "BTS", duration: "4:15", album_img_path: "images/cover2.jpg", path: "music/Jongkook/GOLDEN/01 - 3D (feat. Jack Harlow).mp3"},
+            { name: "Лимонад", artist: "ЛСП", duration: "2:50", album_img_path: "images/cover3.jpg", path: "music/Jongkook/GOLDEN/01 - 3D (feat. Jack Harlow).mp3"},
+            { name: "Permission to dance", artist: "BTS", duration: "3:30", album_img_path: "images/cover1.jpg", path: "music/Jongkook/GOLDEN/01 - 3D (feat. Jack Harlow).mp3"},
     { name: "DNA", artist: "BTS", duration: "4:15", album_img_path: "images/cover2.jpg", path: "music/Jongkook/GOLDEN/01 - 3D (feat. Jack Harlow).mp3"},
     { name: "Лимонад", artist: "ЛСП", duration: "2:50", album_img_path: "images/cover3.jpg", path: "music/Jongkook/GOLDEN/01 - 3D (feat. Jack Harlow).mp3"}
 ];
@@ -644,27 +650,33 @@ function addTracksFromPlaylist(playlistElement){
         <div id="bigPlaylist">
             <img src="${playlistElement.cover}" alt="Playlist Cover" class="big_playlist_image">
             <div class="big_playlist_title">${playlistElement.name}</div>
-            <div class="big_playlist_artist">${playlistElement.author }</div>
+            <div class="big_playlist_artist">${playlistElement.author}</div>
         </div>
-        <div id="tracksFromBigPlaylist">
-        </div>
+        <div id="tracksFromBigPlaylist"></div>
     `;
+
     console.log("name - " + playlistElement.name);
     console.log("author - " + playlistElement.author);
 
     const mainContent = document.querySelector('.content');
     mainContent.appendChild(tracksFromPlaylistSection);
+
     const tracksFromBigPlaylist = document.getElementById('tracksFromBigPlaylist');
-    (playlistElement.tracks).forEach(function(track) {
-        tracksFromBigPlaylist.appendChild(createTrackElement(track));
+
+    var data = getTracksFromPlaylist(1, "BTS");
+    console.log(data);
+
+    data.then(tracks => {
+        console.log(tracks);
+        tracks.forEach(track => {
+            tracksFromBigPlaylist.appendChild(createTrackElement(track));
+        });
+    }).catch(error => {
+        console.error("Error fetching tracks:", error);
     });
-
-
-
-
-//    const mainContent = document.querySelector('.content');
     mainContent.appendChild(tracksFromPlaylistSection);
 }
+
 
 async function showTracksFromPlaylist(id, title) {
     hideAllBlocks();
@@ -678,6 +690,23 @@ async function showTracksFromPlaylist(id, title) {
             addTracksSection("Треки из плейлиста", data);
         } else {
             addTracksSection("Нет добавленных треков", data);
+        }
+    } catch (error) {
+        console.error('Ошибка поиска:', error);
+    }
+}
+
+async function getTracksFromPlaylist(id, title) {
+    hideAllBlocks();
+    try {
+        const response = await fetch(`/tracksFromPlaylist?term=${id}`);
+        const data = await response.json();
+
+
+        if (data.length > 0) {
+            return data;
+        } else {
+            console.log("нет добавленных треков");
         }
     } catch (error) {
         console.error('Ошибка поиска:', error);

@@ -12,7 +12,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #7366bd;
+    background-color: rgba(115, 102, 189, 0.7);
     padding: 10px 20px;
     box-shadow: 0 7px 14px rgba(0,0,0,0.25),
     			0 5px 5px rgba(0,0,0,0.22);
@@ -71,7 +71,7 @@ header {
     border-radius: 10px;
     box-shadow: 0 14px 28px rgba(0,0,0,0.25),
     			0 10px 10px rgba(0,0,0,0.22);
-    background: linear-gradient(to right, #7366bd, #FF416C);
+    background: linear-gradient(to right, rgba(115, 102, 189, 0.8), rgba(255, 65, 108, 0.8));
     margin-left: 0.7em;
     margin-top: 0.7em;
     height: 85vh;
@@ -171,17 +171,19 @@ header {
 
 /* Стили для информации о треке (название, исполнитель) */
 .track-info {
-    display: flex; /* Располагаем элементы в строку */
-    align-items: center; /* Выравниваем элементы по вертикали */
-    flex: 1; /* Растягиваем на всю доступную ширину */
-    margin-right: 10px; /* Добавляем отступ справа для разделения между информацией и кнопками */
+    display: flex;
+    align-items: center;
+    flex: 1;
+    margin-right: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .play-button {
     position: absolute;
     width: 50px; /* Ширина контейнера равна ширине обложки */
     height: 50px; /* Высота контейнера равна высоте обложки */
 }
-
 
 .play-pause-button {
     position: absolute;
@@ -228,7 +230,7 @@ header {
 
 .section {
     border-radius: 7px;
-    background: linear-gradient(to right, rgba(255, 65, 108, 0.7), rgba(115, 102, 189, 0.7));
+    background: linear-gradient(to right, rgba(255, 65, 108, 0.4), rgba(115, 102, 189, 0.4));
     box-shadow: 0 5px 7px rgba(0,0,0,0.25),
                 0 5px 5px rgba(0,0,0,0.22);
     color: white;
@@ -304,8 +306,10 @@ header {
 
 
 .tracksFromPlaylistSection{
+    position: sticky;
+    top: 100;
     border-radius: 7px;
-    background: linear-gradient(to right, rgba(255, 65, 108, 0.7), rgba(115, 102, 189, 0.7));
+    background: linear-gradient(to right, rgba(255, 65, 108, 0.4), rgba(115, 102, 189, 0.4));
     box-shadow: 0 5px 7px rgba(0,0,0,0.25),
                 0 5px 5px rgba(0,0,0,0.22);
     color: white;
@@ -316,6 +320,7 @@ header {
     justify-content: space-between;
     align-items: center;
     gap: 5px;
+    height: 80vh;
 }
 
 #bigPlaylist{
@@ -323,12 +328,12 @@ header {
     flex-direction: column;
     align-items: center;
     padding: 15px;
-    width: 50%;
+    /*width: 50%;*/
     gap: 10px;
 }
 .big_playlist_image{
     border-radius: 10px;
-    width: 80%;
+    width: 100%;
 }
 .big_playlist_title{
     font: 30px;
@@ -338,15 +343,12 @@ header {
     font: 30px;
     font-weight: bold;
 }
-#tracksFromBigPlaylist{
-
+#tracksFromBigPlaylist {
+    flex-grow: 1; /* Чтобы контейнер занимал оставшееся пространство */
+    overflow-y: scroll; /* Включение вертикальной прокрутки */
+    height: 100%;
+    padding: 5px;
 }
-
-
-
-
-
-
 
 .avatar-button {
     width: 1.5em;
