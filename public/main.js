@@ -217,7 +217,6 @@ async function search() {
     }
 }
 
-<<<<<<< HEAD
 async function random() {
     try {
         const response = await fetch(`/random?count=5`); // Запрос на получение случайных треков
@@ -245,7 +244,7 @@ async function random() {
 //     random();
 //     showMainPage();
 // });
-=======
+
 // Глобальные переменные
 let currentTrackIndex = -1;
 let playlistTracks = [];
@@ -262,7 +261,6 @@ function setCurrentTrack(index) {
     }
 }
 
->>>>>>> e88c8b15684b2212453fc5e384588131a0da209a
 
 function createTrackElement(track) {
     const trackElement = document.createElement('div');
