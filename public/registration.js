@@ -51,7 +51,7 @@ $(document).ready(function() {
 		contentType: 'application/json',
 		data: JSON.stringify({ email: email, password: password }), // Данные для отправки
 		success: function(response) {
-		  alert(response.message); // Выводим сообщение об успешной регистрации
+		  alert(response.message); // Выводим сообщение об успешной авторизации
 		  window.location.href = '/main';
 		},
 		error: function(xhr, status, error) {

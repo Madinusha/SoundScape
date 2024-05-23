@@ -1,21 +1,22 @@
 // Sample data
-const myTracks = [
-    { name: "Permission to dance", artist: "BTS", duration: "3:30", album_img_path: "images/cover1.jpg", path: "music/Jongkook/GOLDEN/10 - Shot Glass of Tears.mp3"},
-    { name: "DNA", artist: "BTS", duration: "4:15", album_img_path: "images/cover2.jpg", path: "music/Jongkook/GOLDEN/01 - 3D (feat. Jack Harlow).mp3"},
-    { name: "Лимонад", artist: "ЛСП", duration: "2:50", album_img_path: "images/cover3.jpg", path: "music/Jongkook/GOLDEN/01 - 3D (feat. Jack Harlow).mp3"},
-    { name: "Permission to dance", artist: "BTS", duration: "3:30", album_img_path: "images/cover1.jpg", path: "music/Jongkook/GOLDEN/01 - 3D (feat. Jack Harlow).mp3"},
-     { name: "DNA", artist: "BTS", duration: "4:15", album_img_path: "images/cover2.jpg", path: "music/Jongkook/GOLDEN/01 - 3D (feat. Jack Harlow).mp3"},
-        { name: "Лимонад", artist: "ЛСП", duration: "2:50", album_img_path: "images/cover3.jpg", path: "music/Jongkook/GOLDEN/01 - 3D (feat. Jack Harlow).mp3"},
-        { name: "Permission to dance", artist: "BTS", duration: "3:30", album_img_path: "images/cover1.jpg", path: "music/Jongkook/GOLDEN/01 - 3D (feat. Jack Harlow).mp3"},
-         { name: "DNA", artist: "BTS", duration: "4:15", album_img_path: "images/cover2.jpg", path: "music/Jongkook/GOLDEN/01 - 3D (feat. Jack Harlow).mp3"},
-            { name: "Лимонад", artist: "ЛСП", duration: "2:50", album_img_path: "images/cover3.jpg", path: "music/Jongkook/GOLDEN/01 - 3D (feat. Jack Harlow).mp3"},
-            { name: "Permission to dance", artist: "BTS", duration: "3:30", album_img_path: "images/cover1.jpg", path: "music/Jongkook/GOLDEN/01 - 3D (feat. Jack Harlow).mp3"},
-    { name: "DNA", artist: "BTS", duration: "4:15", album_img_path: "images/cover2.jpg", path: "music/Jongkook/GOLDEN/01 - 3D (feat. Jack Harlow).mp3"},
-    { name: "Лимонад", artist: "ЛСП", duration: "2:50", album_img_path: "images/cover3.jpg", path: "music/Jongkook/GOLDEN/01 - 3D (feat. Jack Harlow).mp3"}
-];
+// var myTracks = [
+//     { name: "Permission to dance", artist: "BTS", duration: "3:30", album_img_path: "images/cover1.jpg", path: "music/Jongkook/GOLDEN/10 - Shot Glass of Tears.mp3"},
+//     { name: "DNA", artist: "BTS", duration: "4:15", album_img_path: "images/cover2.jpg", path: "music/Jongkook/GOLDEN/01 - 3D (feat. Jack Harlow).mp3"},
+//     { name: "Лимонад", artist: "ЛСП", duration: "2:50", album_img_path: "images/cover3.jpg", path: "music/Jongkook/GOLDEN/01 - 3D (feat. Jack Harlow).mp3"},
+//     { name: "Permission to dance", artist: "BTS", duration: "3:30", album_img_path: "images/cover1.jpg", path: "music/Jongkook/GOLDEN/01 - 3D (feat. Jack Harlow).mp3"},
+//      { name: "DNA", artist: "BTS", duration: "4:15", album_img_path: "images/cover2.jpg", path: "music/Jongkook/GOLDEN/01 - 3D (feat. Jack Harlow).mp3"},
+//         { name: "Лимонад", artist: "ЛСП", duration: "2:50", album_img_path: "images/cover3.jpg", path: "music/Jongkook/GOLDEN/01 - 3D (feat. Jack Harlow).mp3"},
+//         { name: "Permission to dance", artist: "BTS", duration: "3:30", album_img_path: "images/cover1.jpg", path: "music/Jongkook/GOLDEN/01 - 3D (feat. Jack Harlow).mp3"},
+//          { name: "DNA", artist: "BTS", duration: "4:15", album_img_path: "images/cover2.jpg", path: "music/Jongkook/GOLDEN/01 - 3D (feat. Jack Harlow).mp3"},
+//             { name: "Лимонад", artist: "ЛСП", duration: "2:50", album_img_path: "images/cover3.jpg", path: "music/Jongkook/GOLDEN/01 - 3D (feat. Jack Harlow).mp3"},
+//             { name: "Permission to dance", artist: "BTS", duration: "3:30", album_img_path: "images/cover1.jpg", path: "music/Jongkook/GOLDEN/01 - 3D (feat. Jack Harlow).mp3"},
+//     { name: "DNA", artist: "BTS", duration: "4:15", album_img_path: "images/cover2.jpg", path: "music/Jongkook/GOLDEN/01 - 3D (feat. Jack Harlow).mp3"},
+//     { name: "Лимонад", artist: "ЛСП", duration: "2:50", album_img_path: "images/cover3.jpg", path: "music/Jongkook/GOLDEN/01 - 3D (feat. Jack Harlow).mp3"}
+// ];
+var myTracks = [];
 
 
-const playlists = [
+var playlists = [
     { name: "Permission to dance", author: "BTS", cover: "images/cover1.jpg", tracks: myTracks},
     { name: "DNA", author: "BTS", cover: "images/cover2.jpg", tracks: myTracks},
     { name: "Лимонад", author: "ЛСП", cover: "images/cover3.jpg", tracks: myTracks},
@@ -215,6 +216,34 @@ async function search() {
         console.error('Ошибка поиска:', error);
     }
 }
+
+async function random() {
+    try {
+        const response = await fetch(`/random?count=5`); // Запрос на получение случайных треков
+        const data = await response.json();
+
+        if (data.length > 0) {
+            var formattedTracks = data.map(track => ({
+                name: track.name,
+                artist: track.artist,
+                duration: track.duration,
+                album_img_path: track.album_img_path,
+                path: track.path
+            }));
+
+            myTracks = formattedTracks; // Записываем полученные случайные треки в массив myTracks
+            showMainPage();
+        } 
+    } catch (error) {
+        console.error('Ошибка поиска:', error);
+    }
+}
+
+// document.addEventListener('DOMContentLoaded', function() {
+//     // Вызываем функцию random() при загрузке страницы
+//     random();
+//     showMainPage();
+// });
 
 function createTrackElement(track) {
     const trackElement = document.createElement('div');
@@ -597,6 +626,14 @@ function activateButton(track) {
     button.disabled = false; // делаем кнопку активной
 }
 
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
 function addPlaylistsSection(Title, playlistList = playlists) {
     const freshHitsSection = document.createElement('div');
     freshHitsSection.classList.add('section');
@@ -608,6 +645,8 @@ function addPlaylistsSection(Title, playlistList = playlists) {
 
     const playlistsContainer = document.createElement('div');
     playlistsContainer.classList.add('playlists-container');
+
+    playlistList = shuffleArray(playlistList);
 
     playlistList.forEach(function(playlist) {
         const playlistItem = document.createElement('div');
@@ -715,6 +754,7 @@ async function getTracksFromPlaylist(id, title) {
 
 
 document.addEventListener('DOMContentLoaded', function() {
-    showMainPage();
+    random();
+    // showMainPage();
 });
 

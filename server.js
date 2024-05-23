@@ -20,7 +20,7 @@ app.use(express.json());
 
 // Настройка сессий
 app.use(session({
-  secret: 'secret-key', // Замените на свой секретный ключ
+  secret: 'secret-key', 
   resave: false,
   saveUninitialized: true,
   cookie: { secure: false } // В реальном приложении установите secure: true для HTTPS
@@ -198,6 +198,33 @@ app.get('/search', (req, res) => {
               res.status(400).json({ error: 'Ничего не найдено.' });
           }
       }
+  });
+});
+
+// Маршрут для получения случайных треков
+app.get('/random', (req, res) => {
+  const count = req.query.count; // Получаем количество случайных треков из параметра запроса
+
+  if (!count || isNaN(count) || count <= 0) {
+    res.status(400).json({ error: 'Неверное количество треков' });
+    return;
+  }
+
+  // Используем параметризированный SQL-запрос для получения случайных треков
+  const sql = `SELECT * FROM tracks ORDER BY RANDOM() LIMIT ?`;
+  
+  dbMusic.all(sql, [count], (err, rows) => {
+    if (err) {
+      res.status(500).json({ error: 'Ошибка запроса' });
+    } else {
+      if (rows.length > 0) {
+        // Если найдены треки, отправляем их клиенту
+        res.status(200).json(rows);
+      } else {
+        // Если ничего не найдено, отправляем сообщение
+        res.status(400).json({ error: 'Ничего не найдено.' });
+      }
+    }
   });
 });
 
