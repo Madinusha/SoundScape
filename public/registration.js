@@ -24,7 +24,7 @@ $(document).ready(function() {
 		contentType: 'application/json',
 		data: JSON.stringify({ nickname: nickname, email: email, password: password }), // Данные для отправки
 		success: function(response) {
-		  alert(response.message); // Выводим сообщение об успешной регистрации
+		//   alert(response.message); // Выводим сообщение об успешной регистрации
 		  // Можно перенаправить пользователя на другую страницу или выполнить другие действия
 		},
 		error: function(xhr, status, error) {
@@ -51,7 +51,7 @@ $(document).ready(function() {
 		contentType: 'application/json',
 		data: JSON.stringify({ email: email, password: password }), // Данные для отправки
 		success: function(response) {
-		  alert(response.message); // Выводим сообщение об успешной авторизации
+		//   alert(response.message); // Выводим сообщение об успешной авторизации
 		  window.location.href = '/main';
 		},
 		error: function(xhr, status, error) {
