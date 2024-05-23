@@ -217,6 +217,7 @@ async function search() {
     }
 }
 
+<<<<<<< HEAD
 async function random() {
     try {
         const response = await fetch(`/random?count=5`); // Запрос на получение случайных треков
@@ -244,6 +245,24 @@ async function random() {
 //     random();
 //     showMainPage();
 // });
+=======
+// Глобальные переменные
+let currentTrackIndex = -1;
+let playlistTracks = [];
+let trackContainers = [];
+
+// Функция установки текущего трека
+function setCurrentTrack(index) {
+    if (index >= 0 && index < trackContainers.length) {
+        currentTrackIndex = index;
+        const playButton = trackContainers[currentTrackIndex].querySelector(".play-pause-button");
+        if (playButton) {
+            playButton.click(); // Нажимаем кнопку воспроизведения текущего трека
+        }
+    }
+}
+
+>>>>>>> e88c8b15684b2212453fc5e384588131a0da209a
 
 function createTrackElement(track) {
     const trackElement = document.createElement('div');
@@ -271,11 +290,13 @@ function createTrackElement(track) {
     const playButton = trackElement.querySelector(".play-pause-button");
     if (playButton) {
         playButton.addEventListener('click', function() {
+            // Обновление текущего индекса трека
+            currentTrackIndex = trackContainers.indexOf(trackElement);
 
             // Удаление предыдущего плеера из хедера, если он есть
             const headerAudioPlayer = document.getElementById('headerAudioPlayer');
             const audio = headerAudioPlayer.querySelector("audio");
-            if ((audio !== null && track.path !== audio.src) || (audio === null)){
+            if ((audio !== null && track.path !== audio.src) || (audio === null)) {
                 headerAudioPlayer.innerHTML = ''; // Очищаем содержимое
                 // Создание нового плеера для текущего трека
                 const audioPlayer = document.createElement('audio');
@@ -288,19 +309,20 @@ function createTrackElement(track) {
 
                 createHeaderPlayer(audioPlayer, headerAudioPlayer, track);
 
-
                 // Добавление плеера в хедер
                 headerAudioPlayer.appendChild(audioPlayer);
                 playOrPause(headerAudioPlayer, trackElement); // Передаем элемент трека в функцию playOrPause
             } else {
-                console.log("трек тот же!!")
+                console.log("трек тот же!!");
                 playOrPause(headerAudioPlayer, trackElement); // Передаем элемент трека в функцию playOrPause
             }
-
         });
     } else {
         console.error('Кнопка воспроизведения не найдена в элементе трека');
     }
+
+    // Добавляем элемент трека в массив контейнеров
+    trackContainers.push(trackElement);
     return trackElement;
 }
 
@@ -373,6 +395,19 @@ function createHeaderPlayer(audioPlayer, headerAudioPlayer, track){
         </div>
         <button class="next-button"></button>
     `;
+    document.querySelector('.next-button').addEventListener('click', () => {
+        if (currentTrackIndex < trackContainers.length - 1) {
+            setCurrentTrack(currentTrackIndex + 1);
+        }
+    });
+
+    document.querySelector('.prev-button').addEventListener('click', () => {
+        if (currentTrackIndex > 0) {
+            setCurrentTrack(currentTrackIndex - 1);
+        }
+    });
+
+
     var sBar = document.getElementById('seek-bar');
     var sArea = document.getElementById('s-area');
     var currentTimeDisplay = document.getElementById('current-time');
@@ -397,11 +432,9 @@ function createHeaderPlayer(audioPlayer, headerAudioPlayer, track){
         currentTimeDisplay.textContent = minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
 
         sBar.style.width = ((currentTime / audioPlayer.duration) * 100) + "%";
-        console.log("я в timeupdate у audioPlayer");
     });
     audioPlayer.addEventListener('loadedmetadata', function() {
         trackLength.innerText = (audioPlayer.duration / 60).toFixed(2);
-        console.log("я в loadedmetadata у audioPlayer");
     });
     const playPauseButton = headerAudioPlayer.querySelector('.play-pause-button');
         playPauseButton.style.opacity = '0.4';
@@ -409,6 +442,7 @@ function createHeaderPlayer(audioPlayer, headerAudioPlayer, track){
         playPauseButton.addEventListener('click', function() {
             if (audioPlayer.paused) {
                 audioPlayer.play();
+//                updateCurrentTrackIndex();
                 playPauseButton.style.backgroundImage = 'url("images/pause.png")'; // Показываем изображение паузы
             } else {
                 audioPlayer.pause();
@@ -416,6 +450,35 @@ function createHeaderPlayer(audioPlayer, headerAudioPlayer, track){
             }
         });
 }
+
+function updateCurrentTrackIndex() {
+    console.log("currentTrackIndex : ", currentTrackIndex);
+    const currentTrackName = document.getElementById('track-name').textContent;
+    currentTrackIndex = playlistTracks.findIndex(track => track.name === currentTrackName);
+}
+
+function playTrackByIndex(index) {
+    console.log(playlistTracks);
+    console.log(playlistTracks.length);
+    if (index >= 0 && index < playlistTracks.length) {
+
+
+        const track = playlistTracks[index];
+
+        // Ваш код для воспроизведения трека, например:
+        // audioPlayer.src = track.path;
+        // audioPlayer.play();
+
+        currentTrackIndex = index;
+    }
+}
+
+
+
+
+
+
+
 
 document.addEventListener('DOMContentLoaded', function() {
     const playButtons = document.querySelectorAll(".play-pause-button");
@@ -681,7 +744,7 @@ function addPlaylistsSection(Title, playlistList = playlists) {
     mainContent.appendChild(freshHitsSection);
 }
 
-function addTracksFromPlaylist(playlistElement){
+function addTracksFromPlaylist(playlistElement) {
     const tracksFromPlaylistSection = document.createElement('div');
     tracksFromPlaylistSection.classList.add('tracksFromPlaylistSection');
 
@@ -703,18 +766,23 @@ function addTracksFromPlaylist(playlistElement){
     const tracksFromBigPlaylist = document.getElementById('tracksFromBigPlaylist');
 
     var data = getTracksFromPlaylist(1, "BTS");
-    console.log(data);
-
     data.then(tracks => {
-        console.log(tracks);
+        playlistTracks = tracks; // Сохраняем треки в глобальную переменную
+        trackContainers = []; // Очищаем массив контейнеров
+
         tracks.forEach(track => {
-            tracksFromBigPlaylist.appendChild(createTrackElement(track));
+            const trackElement = createTrackElement(track);
+            tracksFromBigPlaylist.appendChild(trackElement);
         });
+
+//        updateCurrentTrackIndex(); // Обновляем текущий индекс трека
     }).catch(error => {
         console.error("Error fetching tracks:", error);
     });
+
     mainContent.appendChild(tracksFromPlaylistSection);
 }
+
 
 
 async function showTracksFromPlaylist(id, title) {
@@ -722,7 +790,6 @@ async function showTracksFromPlaylist(id, title) {
     try {
         const response = await fetch(`/tracksFromPlaylist?term=${id}`);
         const data = await response.json();
-
         console.log(data);
 
         if (data.length > 0) {
@@ -740,8 +807,6 @@ async function getTracksFromPlaylist(id, title) {
     try {
         const response = await fetch(`/tracksFromPlaylist?term=${id}`);
         const data = await response.json();
-
-
         if (data.length > 0) {
             return data;
         } else {
